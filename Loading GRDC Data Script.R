@@ -9,3 +9,5 @@ mydata <- mydata[-c(1), ]
 mydata = data.frame(Date = mydata$V1, Value = mydata$V4)
 setDT(mydata)
 mydata[Date >= "2000-01-01", ]
+
+##It is giving me an error I am unsure how to resolve##
