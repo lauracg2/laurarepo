@@ -30,9 +30,9 @@ urban_lon <- as.vector(lon2D)
 urban_lon[flag_na] <- NA
 
 #graphics
-limits = c(0.0, 600)
-labels = c("0","100", "200", "300", "400", "500", "600")
-breaks = c(0, 100, 200, 300, 400, 500, 600)
+limits = c(0.0, 700)
+labels = c("0","100", "200", "300", "400", "500", "600", "700")
+breaks = c(0, 100, 200, 300, 400, 500, 600, 700)
 
 map.world <- map_data(map = "world")
 p<-ggplot(map.world, aes(x = long, y = lat)) +
