@@ -99,7 +99,7 @@ urban_lon[flag_na] <- NA
 #graphics
 limits = c(0.0, 700)
 labels = c("0","100", "200", "300", "400", "500", "600", "700")
-breaks = c(0, 100, 200, 300, 400, 500, 600)
+breaks = c(0, 100, 200, 300, 400, 500, 600, 700)
 
 map.world <- map_data(map = "world")
 p<-ggplot(map.world, aes(x = long, y = lat)) +
@@ -849,7 +849,7 @@ show(p)
 
 ########################## 10 Year Mean ####################################
 Mean10YR <- ((Mean1986 + Mean1987 + Mean1988 + Mean1989 + Mean1990 + Mean1991 +
-  Mean1992 + Mean1993 + Mean1994 + Mean1995)/12)
+  Mean1992 + Mean1993 + Mean1994 + Mean1995)/10)
 
 urban_runoff_vector <- as.vector(Mean10YR)
 
@@ -891,3 +891,16 @@ p <- p + theme(legend.title = element_text(size = 13),
                legend.text = element_text(size = 7))
 show(p)
 
+####################################################################
+GRDC<-Mean10YR
+GRDC_agg<-array(NA,4439)
+dLatCESM<-0.9424; dLonCESM<-1.25;
+for (i in 1:4439){
+  #cat(paste("********* ",i,"*******"),sep='\n')
+  edgeLat<-c(urban_lat[i]-dLatCESM/2,urban_lat[i]+dLatCESM/2)
+  edgeLon<-c(urban_lon[i]-dLonCESM/2,urban_lon[i]+dLonCESM/2)
+  isIn <- (urban_lat>edgeLat[1] & urban_lat<edgeLat[2] & urban_lon>edgeLon[1] & urban_lon<edgeLon[2])
+  GRDC_agg[i]<-mean(GRDC[isIn], na.rm = T)
+}
+GRDCflag<-is.na(GRDC_agg)
+GRDC_agg[GRDCflag]<-NAasd
