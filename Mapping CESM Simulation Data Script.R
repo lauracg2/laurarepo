@@ -190,6 +190,7 @@ p <- p + theme(legend.title = element_text(size = 13),
                legend.text = element_text(size = 7))
 show(p)
 
+
 ########################## Urban Runoff Data 1987 in mm/month ##############################
 library(ggplot2)
 library(maps)
@@ -895,7 +896,7 @@ p <- p + theme(legend.title = element_text(size = 13),
 
 ########################## 10 Year Mean in mm/month ##############################
 Mean10YR <- ((Mean1986 + Mean1987 + Mean1988 + Mean1989 + Mean1990 + Mean1991 +
-                Mean1992 + Mean1993 + Mean1994 + Mean1995)/12)
+                Mean1992 + Mean1993 + Mean1994 + Mean1995)/10)
 surface_runoff_vector <- as.vector(Mean10YR)
 
 #lon
