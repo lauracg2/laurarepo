@@ -2,6 +2,7 @@ rm(list = ls(all=TRUE))
 library(RSAGA)
 library(maps)
 library(ggplot2)
+library(dplyr)
 workdir <- "/Users/lauragray/Downloads/Research/GRDC Data/comp_runoff_hdeg"
 setwd(workdir)
 
@@ -893,14 +894,14 @@ show(p)
 
 ####################################################################
 GRDC<-Mean10YR
-GRDC_agg<-array(NA,4439)
+GRDC_agg<-array(NA,55296)
 dLatCESM<-0.9424; dLonCESM<-1.25;
-for (i in 1:4439){
+for (i in 1:55296){
   #cat(paste("********* ",i,"*******"),sep='\n')
-  edgeLat<-c(urban_lat[i]-dLatCESM/2,urban_lat[i]+dLatCESM/2)
+  edgeLat<-c(urban_lat[-i]-dLatCESM/2,urban_lat[i]+dLatCESM/2)
   edgeLon<-c(urban_lon[i]-dLonCESM/2,urban_lon[i]+dLonCESM/2)
   isIn <- (urban_lat>edgeLat[1] & urban_lat<edgeLat[2] & urban_lon>edgeLon[1] & urban_lon<edgeLon[2])
   GRDC_agg[i]<-mean(GRDC[isIn], na.rm = T)
 }
 GRDCflag<-is.na(GRDC_agg)
-GRDC_agg[GRDCflag]<-NAasd
+GRDC_agg[GRDCflag]<-NA
