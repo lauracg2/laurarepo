@@ -892,7 +892,7 @@ p <- p + theme(legend.title = element_text(size = 13),
                legend.text = element_text(size = 7))
 show(p)
 
-####################################################################
+############################# Data Aggregation #######################################
 GRDC<-Mean10YR
 GRDC_agg<-array(NA,55296)
 dLatCESM<-0.9424; dLonCESM<-1.25;
