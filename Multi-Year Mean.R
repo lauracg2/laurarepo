@@ -716,7 +716,7 @@ Oct94 <- Oct94 %>% dplyr::na_if(-88)
 Nov94 <- read.ascii.grid("comp_runoff_hd_199411.asc", return.header=FALSE, print = 0, 
                          nodata.values = c(), at.once = TRUE, na.strings = "NA")
 Nov94 <- Nov94 %>% dplyr::na_if(-88)
-Dec94 <- read.ascii.grid("comp_runoff_hd_199312.asc", return.header=FALSE, print = 0, 
+Dec94 <- read.ascii.grid("comp_runoff_hd_199412.asc", return.header=FALSE, print = 0, 
                          nodata.values = c(), at.once = TRUE, na.strings = "NA")
 Dec94 <- Dec94 %>% dplyr::na_if(-88)
 Mean1994 <- ((Jan94 + Feb94 + Mar94 + Apr94 + Jun94 + Jul94 + Aug94 + Sep94 + Oct94 + Nov94 + Dec94)/12)
@@ -763,40 +763,41 @@ p <- p + theme(legend.title = element_text(size = 13),
 show(p)
 
 #################################### 1995 ###########################################
-Jan95 <- read.ascii.grid("comp_runoff_hd_199401.asc", return.header=FALSE, print = 0, 
+###FIX THIS IT IS WRONNNNNGGGG
+Jan95 <- read.ascii.grid("comp_runoff_hd_199501.asc", return.header=FALSE, print = 0, 
                          nodata.values = c(), at.once = TRUE, na.strings = "NA")
 Jan95 <- Jan95 %>% dplyr::na_if(-88)
-Feb95 <- read.ascii.grid("comp_runoff_hd_199402.asc", return.header=FALSE, print = 0, 
+Feb95 <- read.ascii.grid("comp_runoff_hd_199502.asc", return.header=FALSE, print = 0, 
                          nodata.values = c(), at.once = TRUE, na.strings = "NA")
 Feb95 <- Feb95 %>% dplyr::na_if(-88)
-Mar95 <- read.ascii.grid("comp_runoff_hd_199403.asc", return.header=FALSE, print = 0, 
+Mar95 <- read.ascii.grid("comp_runoff_hd_199503.asc", return.header=FALSE, print = 0, 
                          nodata.values = c(), at.once = TRUE, na.strings = "NA")
 Mar95 <- Mar95 %>% dplyr::na_if(-88)
-Apr95 <- read.ascii.grid("comp_runoff_hd_199404.asc", return.header=FALSE, print = 0, 
+Apr95 <- read.ascii.grid("comp_runoff_hd_199504.asc", return.header=FALSE, print = 0, 
                          nodata.values = c(), at.once = TRUE, na.strings = "NA")
 Apr95 <- Apr95 %>% dplyr::na_if(-88)
-May95 <- read.ascii.grid("comp_runoff_hd_199405.asc", return.header=FALSE, print = 0, 
+May95 <- read.ascii.grid("comp_runoff_hd_199505.asc", return.header=FALSE, print = 0, 
                          nodata.values = c(), at.once = TRUE, na.strings = "NA")
 May95 <- May95 %>% dplyr::na_if(-88)
-Jun95 <- read.ascii.grid("comp_runoff_hd_199406.asc", return.header=FALSE, print = 0, 
+Jun95 <- read.ascii.grid("comp_runoff_hd_199506.asc", return.header=FALSE, print = 0, 
                          nodata.values = c(), at.once = TRUE, na.strings = "NA")
 Jun95 <- Jun95 %>% dplyr::na_if(-88)
-Jul95 <- read.ascii.grid("comp_runoff_hd_199407.asc", return.header=FALSE, print = 0, 
+Jul95 <- read.ascii.grid("comp_runoff_hd_199507.asc", return.header=FALSE, print = 0, 
                          nodata.values = c(), at.once = TRUE, na.strings = "NA")
 Jul95 <- Jul95 %>% dplyr::na_if(-88)
-Aug95 <- read.ascii.grid("comp_runoff_hd_199408.asc", return.header=FALSE, print = 0, 
+Aug95 <- read.ascii.grid("comp_runoff_hd_199508.asc", return.header=FALSE, print = 0, 
                          nodata.values = c(), at.once = TRUE, na.strings = "NA")
 Aug95 <- Aug95 %>% dplyr::na_if(-88)
-Sep95 <- read.ascii.grid("comp_runoff_hd_199409.asc", return.header=FALSE, print = 0, 
+Sep95 <- read.ascii.grid("comp_runoff_hd_199509.asc", return.header=FALSE, print = 0, 
                          nodata.values = c(), at.once = TRUE, na.strings = "NA")
 Sep95 <- Sep95 %>% dplyr::na_if(-88)
-Oct95 <- read.ascii.grid("comp_runoff_hd_199410.asc", return.header=FALSE, print = 0, 
+Oct95 <- read.ascii.grid("comp_runoff_hd_199510.asc", return.header=FALSE, print = 0, 
                          nodata.values = c(), at.once = TRUE, na.strings = "NA")
 Oct95 <- Oct95 %>% dplyr::na_if(-88)
-Nov95 <- read.ascii.grid("comp_runoff_hd_199411.asc", return.header=FALSE, print = 0, 
+Nov95 <- read.ascii.grid("comp_runoff_hd_199511.asc", return.header=FALSE, print = 0, 
                          nodata.values = c(), at.once = TRUE, na.strings = "NA")
 Nov95 <- Nov95 %>% dplyr::na_if(-88)
-Dec95 <- read.ascii.grid("comp_runoff_hd_199312.asc", return.header=FALSE, print = 0, 
+Dec95 <- read.ascii.grid("comp_runoff_hd_199512.asc", return.header=FALSE, print = 0, 
                          nodata.values = c(), at.once = TRUE, na.strings = "NA")
 Dec95 <- Dec95 %>% dplyr::na_if(-88)
 Mean1995 <- ((Jan95 + Feb95 + Mar95 + Apr95 + Jun95 + Jul95 + Aug95 + Sep95 + Oct95 + Nov95 + Dec95)/12)
@@ -844,14 +845,9 @@ show(p)
 
 
 
-
-
-
-
 ########################## 10 Year Mean ####################################
 Mean10YR <- ((Mean1986 + Mean1987 + Mean1988 + Mean1989 + Mean1990 + Mean1991 +
   Mean1992 + Mean1993 + Mean1994 + Mean1995)/10)
-
 urban_runoff_vector <- as.vector(Mean10YR)
 
 #lon
@@ -893,15 +889,70 @@ p <- p + theme(legend.title = element_text(size = 13),
 show(p)
 
 ############################# Data Aggregation #######################################
+library(ncdf4)
+workdir <- "/Users/lauragray"
+setwd(workdir)
+fi <- nc_open("b.e21.BHIST.f09_g17.CMIP6-historical.001.clm2.h0.QRUNOFF.185001-201412.nc")
+#lon
+lon <- ncvar_get(fi, "lon")
+lon2D <- kronecker(matrix(1, 1, 192), lon)
+lon2D[!is.na(lon2D) & lon2D >= 180] <- lon2D[!is.na(lon2D) & lon2D >= 180] - 360
+
+#lat
+lat <- ncvar_get(fi, "lat", verbose = F)
+lat <- data.frame(lat)
+lat <- t(lat)
+lat2D <- kronecker(matrix(1, 288, 1), lat)
+
+
+CESM <- read.csv(file = "CESM10YRMean.csv")
+total_runoff_vector <- as.vector(CESM)
+flag_na <- is.na(total_runoff_vector)
+CESM_lat <- as.vector(lat2D)
+CESM_lat[flag_na] <- NA
+CESM_lon <- as.vector(lon2D)
+CESM_lon[flag_na] <- NA
+
+
 GRDC<-Mean10YR
 GRDC_agg<-array(NA,55296)
 dLatCESM<-0.9424; dLonCESM<-1.25;
 for (i in 1:55296){
   #cat(paste("********* ",i,"*******"),sep='\n')
-  edgeLat<-c(urban_lat[-i]-dLatCESM/2,urban_lat[i]+dLatCESM/2)
-  edgeLon<-c(urban_lon[i]-dLonCESM/2,urban_lon[i]+dLonCESM/2)
+  edgeLat<-c(CESM_lat[i]-dLatCESM/2,CESM_lat[i]+dLatCESM/2)
+  edgeLon<-c(CESM_lon[i]-dLonCESM/2,CESM_lon[i]+dLonCESM/2)
   isIn <- (urban_lat>edgeLat[1] & urban_lat<edgeLat[2] & urban_lon>edgeLon[1] & urban_lon<edgeLon[2])
   GRDC_agg[i]<-mean(GRDC[isIn], na.rm = T)
 }
 GRDCflag<-is.na(GRDC_agg)
 GRDC_agg[GRDCflag]<-NA
+
+CESM <- data.frame(total_runoff_vector)
+CESM <- data.matrix(CESM)
+CESM <- as.vector(CESM)
+
+Bias <- CESM - GRDC_agg
+
+##Bias Graphics## 
+
+limits = c(0.0, 700)
+labels = c("0","100", "200", "300", "400", "500", "600", "700")
+breaks = c(0, 100, 200, 300, 400, 500, 600, 700)
+
+map.world <- map_data(map = "world")
+p<-ggplot(map.world, aes(x = long, y = lat)) +
+  geom_polygon(aes(group = group), fill = "lightgrey", colour = "gray") +
+  theme(text= element_text(size = 16), legend.position="bottom") +
+  xlab(expression(paste("Longitude ("^"o",")"))) +
+  ylab(expression(paste("Latitude ("^"o",")"))) +
+  geom_point(data = as.data.frame(Bias), aes(x = CESM_lon, y = CESM_lat, colour = Bias), size = 0.5) +
+  coord_fixed(ratio = 1.25) +
+  scale_color_distiller(name = expression(paste("Average Monthly Bias from 1986 to 1995 (mm/month)",sep="")),
+                        palette = "Spectral")
+                        #limits = limits,
+                        #labels = labels,
+                        #breaks = breaks)
+p <- p + theme(legend.title = element_text(size = 13), 
+               legend.text = element_text(size = 7))
+show(p)
+
