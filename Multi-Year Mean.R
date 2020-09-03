@@ -935,9 +935,9 @@ Bias <- CESM - GRDC_agg
 
 ##Bias Graphics## 
 
-limits = c(0.0, 700)
-labels = c("0","100", "200", "300", "400", "500", "600", "700")
-breaks = c(0, 100, 200, 300, 400, 500, 600, 700)
+limits = c(-200, 400)
+labels = c("-200", "0", "200", "400")
+breaks = c(-200, 0, 200, 400)
 
 map.world <- map_data(map = "world")
 p<-ggplot(map.world, aes(x = long, y = lat)) +
@@ -948,11 +948,15 @@ p<-ggplot(map.world, aes(x = long, y = lat)) +
   geom_point(data = as.data.frame(Bias), aes(x = CESM_lon, y = CESM_lat, colour = Bias), size = 0.5) +
   coord_fixed(ratio = 1.25) +
   scale_color_distiller(name = expression(paste("Average Monthly Bias from 1986 to 1995 (mm/month)",sep="")),
-                        palette = "Spectral")
-                        #limits = limits,
-                        #labels = labels,
-                        #breaks = breaks)
+                        palette = "RdYlBu",
+                        limits = limits,
+                        labels = labels,
+                        breaks = breaks)
 p <- p + theme(legend.title = element_text(size = 13), 
                legend.text = element_text(size = 7))
 show(p)
+
+Correlation <- cor(CESM, GRDC_agg)
+
+library(GGally)
 
