@@ -956,6 +956,7 @@ p <- p + theme(legend.title = element_text(size = 13),
                legend.text = element_text(size = 7))
 show(p)
 
+############################ Correlation Coefficient ##########################
 Correlation <- cor(CESM, GRDC_agg)
 
 library(GGally)
