@@ -567,7 +567,7 @@ p<-ggplot(map.world, aes(x = long, y = lat)) +
   geom_point(data = as.data.frame(Bias), aes(x = CESM_lon, y = CESM_lat, colour = Bias), size = 0.5) +
   coord_fixed(ratio = 1.25) +
   scale_color_distiller(name = expression(paste("Average Monthly Bias from 1986 to 1995 (mm/month)",sep="")),
-                        palette = "Spectral",
+                        palette = "RdYlBu",
                         limits = limits,
                         labels = labels,
                         breaks = breaks)
@@ -593,7 +593,7 @@ p<-ggplot(map.world, aes(x = long, y = lat)) +
   geom_point(data = as.data.frame(MERRA_agg), aes(x = CESM_lon, y = CESM_lat, colour = MERRA_agg), size = 0.5) +
   coord_fixed(ratio = 1.25) +
   scale_color_distiller(name = expression(paste("MERRA-2 Aggregated Average from 1986 to 1995 (mm/month)",sep="")),
-                        palette = "Spectral",
+                        palette = "RdYlBu",
                         limits = limits,
                         labels = labels,
                         breaks = breaks)
