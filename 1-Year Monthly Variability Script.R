@@ -146,13 +146,13 @@ limits = c(-200, 400)
 labels = c("-200", "0", "200", "400")
 breaks = c(-200, 0, 200, 400)
 
-map.world <- map_data(map = "world")
-p<-ggplot(map.world, aes(x = long, y = lat)) +
+map.us <- map_data(map = "state")
+p<-ggplot(map.us, aes(x = long, y = lat)) +  xlim(-125, -69) + ylim(25, 50) +
   geom_polygon(aes(group = group), fill = "lightgrey", colour = "gray") +
-  theme(text= element_text(size = 16), legend.position="bottom") +
+  theme(text= element_text(size = 16), legend.position="bottom", panel.background = element_rect(fill="grey")) +
   xlab(expression(paste("Longitude ("^"o",")"))) +
   ylab(expression(paste("Latitude ("^"o",")"))) +
-  geom_point(data = as.data.frame(Bias), aes(x = CESM_lon, y = CESM_lat, colour = Bias), size = 0.5) +
+  geom_point(data = as.data.frame(Bias), aes(x = CESM_lon, y = CESM_lat, colour = Bias), size = 2) +
   coord_fixed(ratio = 1.25) +
   scale_color_distiller(name = expression(paste("Bias between CESM and GRDC, January 1987 (mm/month)",sep="")),
                         palette = "RdYlBu",
@@ -274,35 +274,35 @@ show(p)
 
 
 ############################## APRIL Aggregation ##############################
-total_runoff_vector <- as.vector(CMar87)
+total_runoff_vector <- as.vector(CApr87)
 flag_na <- is.na(total_runoff_vector)
 CESM_lat <- as.vector(lat2D)
 CESM_lat[flag_na] <- NA
 CESM_lon <- as.vector(lon2D)
 CESM_lon[flag_na] <- NA
 
-Mar87 <- t(Mar87)
-Mar87 <- Mar87[,order(ncol(Mar87):1)]
-GRDCMar<-Mar87
-GRDCMar_agg<-array(NA,55296)
+Apr87 <- t(Apr87)
+Apr87 <- Apr87[,order(ncol(Apr87):1)]
+GRDCApr<-Apr87
+GRDCApr_agg<-array(NA,55296)
 dLatCESM<-0.9424; dLonCESM<-1.25;
 for (i in 1:55296){
   #cat(paste("********* ",i,"*******"),sep='\n')
   edgeLat<-c(CESM_lat[i]-dLatCESM/2,CESM_lat[i]+dLatCESM/2)
   edgeLon<-c(CESM_lon[i]-dLonCESM/2,CESM_lon[i]+dLonCESM/2)
   isIn <- (urban_lat>edgeLat[1] & urban_lat<edgeLat[2] & urban_lon>edgeLon[1] & urban_lon<edgeLon[2])
-  GRDCMar_agg[i]<-mean(GRDCMar[isIn], na.rm = T)
+  GRDCApr_agg[i]<-mean(GRDCApr[isIn], na.rm = T)
 }
-GRDCflag<-is.na(GRDCMar_agg)
-GRDCMar_agg[GRDCflag]<-NA
-write.csv(GRDCMar_agg, "GRDC Mar87 Aggregation.csv", row.names = FALSE)
+GRDCflag<-is.na(GRDCApr_agg)
+GRDCApr_agg[GRDCflag]<-NA
+write.csv(GRDCApr_agg, "GRDC Apr87 Aggregation.csv", row.names = FALSE)
 
-CESMMar <- as.vector(CMar87)
-CESMMar <- data.frame(CESMMar)
-CESMMar <- data.matrix(CESMMar)
-CESMMar <- as.vector(CESMMar)
+CESMApr <- as.vector(CApr87)
+CESMApr <- data.frame(CESMApr)
+CESMApr <- data.matrix(CESMApr)
+CESMApr <- as.vector(CESMApr)
 
-Bias <- CESMMar - GRDCMar_agg
+Bias <- CESMApr - GRDCApr_agg
 
 ##Bias Graphics## 
 
@@ -318,7 +318,440 @@ p<-ggplot(map.world, aes(x = long, y = lat)) +
   ylab(expression(paste("Latitude ("^"o",")"))) +
   geom_point(data = as.data.frame(Bias), aes(x = CESM_lon, y = CESM_lat, colour = Bias), size = 0.5) +
   coord_fixed(ratio = 1.25) +
-  scale_color_distiller(name = expression(paste("Bias between CESM and GRDC, March 1987 (mm/month)",sep="")),
+  scale_color_distiller(name = expression(paste("Bias between CESM and GRDC, April 1987 (mm/month)",sep="")),
+                        palette = "RdYlBu",
+                        limits = limits,
+                        labels = labels,
+                        breaks = breaks)
+p <- p + theme(legend.title = element_text(size = 13), 
+               legend.text = element_text(size = 7))
+show(p)
+
+############################## MAY Aggregation ##############################
+total_runoff_vector <- as.vector(CMay87)
+flag_na <- is.na(total_runoff_vector)
+CESM_lat <- as.vector(lat2D)
+CESM_lat[flag_na] <- NA
+CESM_lon <- as.vector(lon2D)
+CESM_lon[flag_na] <- NA
+
+May87 <- t(May87)
+May87 <- May87[,order(ncol(May87):1)]
+GRDCMay<-May87
+GRDCMay_agg<-array(NA,55296)
+dLatCESM<-0.9424; dLonCESM<-1.25;
+for (i in 1:55296){
+  #cat(paste("********* ",i,"*******"),sep='\n')
+  edgeLat<-c(CESM_lat[i]-dLatCESM/2,CESM_lat[i]+dLatCESM/2)
+  edgeLon<-c(CESM_lon[i]-dLonCESM/2,CESM_lon[i]+dLonCESM/2)
+  isIn <- (urban_lat>edgeLat[1] & urban_lat<edgeLat[2] & urban_lon>edgeLon[1] & urban_lon<edgeLon[2])
+  GRDCMay_agg[i]<-mean(GRDCMay[isIn], na.rm = T)
+}
+GRDCflag<-is.na(GRDCMay_agg)
+GRDCMay_agg[GRDCflag]<-NA
+write.csv(GRDCMay_agg, "GRDC May87 Aggregation.csv", row.names = FALSE)
+
+CESMMay <- as.vector(CMay87)
+CESMMay <- data.frame(CESMMay)
+CESMMay <- data.matrix(CESMMay)
+CESMMay <- as.vector(CESMMay)
+
+Bias <- CESMMay - GRDCMay_agg
+
+##Bias Graphics## 
+
+limits = c(-200, 400)
+labels = c("-200", "0", "200", "400")
+breaks = c(-200, 0, 200, 400)
+
+map.world <- map_data(map = "world")
+p<-ggplot(map.world, aes(x = long, y = lat)) +
+  geom_polygon(aes(group = group), fill = "lightgrey", colour = "gray") +
+  theme(text= element_text(size = 16), legend.position="bottom") +
+  xlab(expression(paste("Longitude ("^"o",")"))) +
+  ylab(expression(paste("Latitude ("^"o",")"))) +
+  geom_point(data = as.data.frame(Bias), aes(x = CESM_lon, y = CESM_lat, colour = Bias), size = 0.5) +
+  coord_fixed(ratio = 1.25) +
+  scale_color_distiller(name = expression(paste("Bias between CESM and GRDC, May 1987 (mm/month)",sep="")),
+                        palette = "RdYlBu",
+                        limits = limits,
+                        labels = labels,
+                        breaks = breaks)
+p <- p + theme(legend.title = element_text(size = 13), 
+               legend.text = element_text(size = 7))
+show(p)
+
+############################## JUNE Aggregation ##############################
+total_runoff_vector <- as.vector(CJun87)
+flag_na <- is.na(total_runoff_vector)
+CESM_lat <- as.vector(lat2D)
+CESM_lat[flag_na] <- NA
+CESM_lon <- as.vector(lon2D)
+CESM_lon[flag_na] <- NA
+
+Jun87 <- t(Jun87)
+Jun87 <- Jun87[,order(ncol(Jun87):1)]
+GRDCJun<-Jun87
+GRDCJun_agg<-array(NA,55296)
+dLatCESM<-0.9424; dLonCESM<-1.25;
+for (i in 1:55296){
+  #cat(paste("********* ",i,"*******"),sep='\n')
+  edgeLat<-c(CESM_lat[i]-dLatCESM/2,CESM_lat[i]+dLatCESM/2)
+  edgeLon<-c(CESM_lon[i]-dLonCESM/2,CESM_lon[i]+dLonCESM/2)
+  isIn <- (urban_lat>edgeLat[1] & urban_lat<edgeLat[2] & urban_lon>edgeLon[1] & urban_lon<edgeLon[2])
+  GRDCJun_agg[i]<-mean(GRDCJun[isIn], na.rm = T)
+}
+GRDCflag<-is.na(GRDCJun_agg)
+GRDCJun_agg[GRDCflag]<-NA
+write.csv(GRDCJun_agg, "GRDC Jun87 Aggregation.csv", row.names = FALSE)
+
+CESMJun <- as.vector(CJun87)
+CESMJun <- data.frame(CESMJun)
+CESMJun <- data.matrix(CESMJun)
+CESMJun <- as.vector(CESMJun)
+
+Bias <- CESMJun - GRDCJun_agg
+
+##Bias Graphics## 
+
+limits = c(-200, 400)
+labels = c("-200", "0", "200", "400")
+breaks = c(-200, 0, 200, 400)
+
+map.world <- map_data(map = "world")
+p<-ggplot(map.world, aes(x = long, y = lat)) +
+  geom_polygon(aes(group = group), fill = "lightgrey", colour = "gray") +
+  theme(text= element_text(size = 16), legend.position="bottom") +
+  xlab(expression(paste("Longitude ("^"o",")"))) +
+  ylab(expression(paste("Latitude ("^"o",")"))) +
+  geom_point(data = as.data.frame(Bias), aes(x = CESM_lon, y = CESM_lat, colour = Bias), size = 0.5) +
+  coord_fixed(ratio = 1.25) +
+  scale_color_distiller(name = expression(paste("Bias between CESM and GRDC, June 1987 (mm/month)",sep="")),
+                        palette = "RdYlBu",
+                        limits = limits,
+                        labels = labels,
+                        breaks = breaks)
+p <- p + theme(legend.title = element_text(size = 13), 
+               legend.text = element_text(size = 7))
+show(p)
+
+############################## JULY Aggregation ##############################
+total_runoff_vector <- as.vector(CJul87)
+flag_na <- is.na(total_runoff_vector)
+CESM_lat <- as.vector(lat2D)
+CESM_lat[flag_na] <- NA
+CESM_lon <- as.vector(lon2D)
+CESM_lon[flag_na] <- NA
+
+Jul87 <- t(Jul87)
+Jul87 <- Jul87[,order(ncol(Jul87):1)]
+GRDCJul<-Jul87
+GRDCJul_agg<-array(NA,55296)
+dLatCESM<-0.9424; dLonCESM<-1.25;
+for (i in 1:55296){
+  #cat(paste("********* ",i,"*******"),sep='\n')
+  edgeLat<-c(CESM_lat[i]-dLatCESM/2,CESM_lat[i]+dLatCESM/2)
+  edgeLon<-c(CESM_lon[i]-dLonCESM/2,CESM_lon[i]+dLonCESM/2)
+  isIn <- (urban_lat>edgeLat[1] & urban_lat<edgeLat[2] & urban_lon>edgeLon[1] & urban_lon<edgeLon[2])
+  GRDCJul_agg[i]<-mean(GRDCJul[isIn], na.rm = T)
+}
+GRDCflag<-is.na(GRDCJul_agg)
+GRDCJul_agg[GRDCflag]<-NA
+write.csv(GRDCJul_agg, "GRDC Jul87 Aggregation.csv", row.names = FALSE)
+
+CESMJul <- as.vector(CJul87)
+CESMJul <- data.frame(CESMJul)
+CESMJul <- data.matrix(CESMJul)
+CESMJul <- as.vector(CESMJul)
+
+Bias <- CESMJul - GRDCJul_agg
+
+##Bias Graphics## 
+
+limits = c(-200, 400)
+labels = c("-200", "0", "200", "400")
+breaks = c(-200, 0, 200, 400)
+
+map.world <- map_data(map = "world")
+p<-ggplot(map.world, aes(x = long, y = lat)) +
+  geom_polygon(aes(group = group), fill = "lightgrey", colour = "gray") +
+  theme(text= element_text(size = 16), legend.position="bottom") +
+  xlab(expression(paste("Longitude ("^"o",")"))) +
+  ylab(expression(paste("Latitude ("^"o",")"))) +
+  geom_point(data = as.data.frame(Bias), aes(x = CESM_lon, y = CESM_lat, colour = Bias), size = 0.5) +
+  coord_fixed(ratio = 1.25) +
+  scale_color_distiller(name = expression(paste("Bias between CESM and GRDC, July 1987 (mm/month)",sep="")),
+                        palette = "RdYlBu",
+                        limits = limits,
+                        labels = labels,
+                        breaks = breaks)
+p <- p + theme(legend.title = element_text(size = 13), 
+               legend.text = element_text(size = 7))
+show(p)
+
+############################## AUGUST Aggregation ##############################
+total_runoff_vector <- as.vector(CAug87)
+flag_na <- is.na(total_runoff_vector)
+CESM_lat <- as.vector(lat2D)
+CESM_lat[flag_na] <- NA
+CESM_lon <- as.vector(lon2D)
+CESM_lon[flag_na] <- NA
+
+Aug87 <- t(Aug87)
+Aug87 <- Aug87[,order(ncol(Aug87):1)]
+GRDCAug<-Aug87
+GRDCAug_agg<-array(NA,55296)
+dLatCESM<-0.9424; dLonCESM<-1.25;
+for (i in 1:55296){
+  #cat(paste("********* ",i,"*******"),sep='\n')
+  edgeLat<-c(CESM_lat[i]-dLatCESM/2,CESM_lat[i]+dLatCESM/2)
+  edgeLon<-c(CESM_lon[i]-dLonCESM/2,CESM_lon[i]+dLonCESM/2)
+  isIn <- (urban_lat>edgeLat[1] & urban_lat<edgeLat[2] & urban_lon>edgeLon[1] & urban_lon<edgeLon[2])
+  GRDCAug_agg[i]<-mean(GRDCAug[isIn], na.rm = T)
+}
+GRDCflag<-is.na(GRDCAug_agg)
+GRDCAug_agg[GRDCflag]<-NA
+write.csv(GRDCAug_agg, "GRDC Aug87 Aggregation.csv", row.names = FALSE)
+
+CESMAug <- as.vector(CAug87)
+CESMAug <- data.frame(CESMAug)
+CESMAug <- data.matrix(CESMAug)
+CESMAug <- as.vector(CESMAug)
+
+Bias <- CESMAug - GRDCAug_agg
+
+##Bias Graphics## 
+
+limits = c(-200, 400)
+labels = c("-200", "0", "200", "400")
+breaks = c(-200, 0, 200, 400)
+
+map.world <- map_data(map = "world")
+p<-ggplot(map.world, aes(x = long, y = lat)) +
+  geom_polygon(aes(group = group), fill = "lightgrey", colour = "gray") +
+  theme(text= element_text(size = 16), legend.position="bottom") +
+  xlab(expression(paste("Longitude ("^"o",")"))) +
+  ylab(expression(paste("Latitude ("^"o",")"))) +
+  geom_point(data = as.data.frame(Bias), aes(x = CESM_lon, y = CESM_lat, colour = Bias), size = 0.5) +
+  coord_fixed(ratio = 1.25) +
+  scale_color_distiller(name = expression(paste("Bias between CESM and GRDC, August 1987 (mm/month)",sep="")),
+                        palette = "RdYlBu",
+                        limits = limits,
+                        labels = labels,
+                        breaks = breaks)
+p <- p + theme(legend.title = element_text(size = 13), 
+               legend.text = element_text(size = 7))
+show(p)
+
+############################## SEPTEMBER Aggregation ##############################
+total_runoff_vector <- as.vector(CSep87)
+flag_na <- is.na(total_runoff_vector)
+CESM_lat <- as.vector(lat2D)
+CESM_lat[flag_na] <- NA
+CESM_lon <- as.vector(lon2D)
+CESM_lon[flag_na] <- NA
+
+Sep87 <- t(Sep87)
+Sep87 <- Sep87[,order(ncol(Sep87):1)]
+GRDCSep<-Sep87
+GRDCSep_agg<-array(NA,55296)
+dLatCESM<-0.9424; dLonCESM<-1.25;
+for (i in 1:55296){
+  #cat(paste("********* ",i,"*******"),sep='\n')
+  edgeLat<-c(CESM_lat[i]-dLatCESM/2,CESM_lat[i]+dLatCESM/2)
+  edgeLon<-c(CESM_lon[i]-dLonCESM/2,CESM_lon[i]+dLonCESM/2)
+  isIn <- (urban_lat>edgeLat[1] & urban_lat<edgeLat[2] & urban_lon>edgeLon[1] & urban_lon<edgeLon[2])
+  GRDCSep_agg[i]<-mean(GRDCSep[isIn], na.rm = T)
+}
+GRDCflag<-is.na(GRDCSep_agg)
+GRDCSep_agg[GRDCflag]<-NA
+write.csv(GRDCSep_agg, "GRDC Sep87 Aggregation.csv", row.names = FALSE)
+
+CESMSep <- as.vector(CSep87)
+CESMSep <- data.frame(CESMSep)
+CESMSep <- data.matrix(CESMSep)
+CESMSep <- as.vector(CESMSep)
+
+Bias <- CESMSep - GRDCSep_agg
+
+##Bias Graphics## 
+
+limits = c(-200, 400)
+labels = c("-200", "0", "200", "400")
+breaks = c(-200, 0, 200, 400)
+
+map.world <- map_data(map = "world")
+p<-ggplot(map.world, aes(x = long, y = lat)) +
+  geom_polygon(aes(group = group), fill = "lightgrey", colour = "gray") +
+  theme(text= element_text(size = 16), legend.position="bottom") +
+  xlab(expression(paste("Longitude ("^"o",")"))) +
+  ylab(expression(paste("Latitude ("^"o",")"))) +
+  geom_point(data = as.data.frame(Bias), aes(x = CESM_lon, y = CESM_lat, colour = Bias), size = 0.5) +
+  coord_fixed(ratio = 1.25) +
+  scale_color_distiller(name = expression(paste("Bias between CESM and GRDC, September 1987 (mm/month)",sep="")),
+                        palette = "RdYlBu",
+                        limits = limits,
+                        labels = labels,
+                        breaks = breaks)
+p <- p + theme(legend.title = element_text(size = 13), 
+               legend.text = element_text(size = 7))
+show(p)
+
+############################## OCTOBER Aggregation ##############################
+total_runoff_vector <- as.vector(COct87)
+flag_na <- is.na(total_runoff_vector)
+CESM_lat <- as.vector(lat2D)
+CESM_lat[flag_na] <- NA
+CESM_lon <- as.vector(lon2D)
+CESM_lon[flag_na] <- NA
+
+Oct87 <- t(Oct87)
+Oct87 <- Oct87[,order(ncol(Oct87):1)]
+GRDCOct<-Oct87
+GRDCOct_agg<-array(NA,55296)
+dLatCESM<-0.9424; dLonCESM<-1.25;
+for (i in 1:55296){
+  #cat(paste("********* ",i,"*******"),sep='\n')
+  edgeLat<-c(CESM_lat[i]-dLatCESM/2,CESM_lat[i]+dLatCESM/2)
+  edgeLon<-c(CESM_lon[i]-dLonCESM/2,CESM_lon[i]+dLonCESM/2)
+  isIn <- (urban_lat>edgeLat[1] & urban_lat<edgeLat[2] & urban_lon>edgeLon[1] & urban_lon<edgeLon[2])
+  GRDCOct_agg[i]<-mean(GRDCOct[isIn], na.rm = T)
+}
+GRDCflag<-is.na(GRDCOct_agg)
+GRDCOct_agg[GRDCflag]<-NA
+write.csv(GRDCOct_agg, "GRDC Oct87 Aggregation.csv", row.names = FALSE)
+
+CESMOct <- as.vector(COct87)
+CESMOct <- data.frame(CESMOct)
+CESMOct <- data.matrix(CESMOct)
+CESMOct <- as.vector(CESMOct)
+
+Bias <- CESMOct - GRDCOct_agg
+
+##Bias Graphics## 
+
+limits = c(-200, 400)
+labels = c("-200", "0", "200", "400")
+breaks = c(-200, 0, 200, 400)
+
+map.world <- map_data(map = "world")
+p<-ggplot(map.world, aes(x = long, y = lat)) +
+  geom_polygon(aes(group = group), fill = "lightgrey", colour = "gray") +
+  theme(text= element_text(size = 16), legend.position="bottom") +
+  xlab(expression(paste("Longitude ("^"o",")"))) +
+  ylab(expression(paste("Latitude ("^"o",")"))) +
+  geom_point(data = as.data.frame(Bias), aes(x = CESM_lon, y = CESM_lat, colour = Bias), size = 0.5) +
+  coord_fixed(ratio = 1.25) +
+  scale_color_distiller(name = expression(paste("Bias between CESM and GRDC, October 1987 (mm/month)",sep="")),
+                        palette = "RdYlBu",
+                        limits = limits,
+                        labels = labels,
+                        breaks = breaks)
+p <- p + theme(legend.title = element_text(size = 13), 
+               legend.text = element_text(size = 7))
+show(p)
+
+
+############################## NOVEMBER Aggregation ##############################
+total_runoff_vector <- as.vector(CNov87)
+flag_na <- is.na(total_runoff_vector)
+CESM_lat <- as.vector(lat2D)
+CESM_lat[flag_na] <- NA
+CESM_lon <- as.vector(lon2D)
+CESM_lon[flag_na] <- NA
+
+Nov87 <- t(Nov87)
+Nov87 <- Nov87[,order(ncol(Nov87):1)]
+GRDCNov<-Nov87
+GRDCNov_agg<-array(NA,55296)
+dLatCESM<-0.9424; dLonCESM<-1.25;
+for (i in 1:55296){
+  #cat(paste("********* ",i,"*******"),sep='\n')
+  edgeLat<-c(CESM_lat[i]-dLatCESM/2,CESM_lat[i]+dLatCESM/2)
+  edgeLon<-c(CESM_lon[i]-dLonCESM/2,CESM_lon[i]+dLonCESM/2)
+  isIn <- (urban_lat>edgeLat[1] & urban_lat<edgeLat[2] & urban_lon>edgeLon[1] & urban_lon<edgeLon[2])
+  GRDCNov_agg[i]<-mean(GRDCNov[isIn], na.rm = T)
+}
+GRDCflag<-is.na(GRDCNov_agg)
+GRDCNov_agg[GRDCflag]<-NA
+write.csv(GRDCNov_agg, "GRDC Nov87 Aggregation.csv", row.names = FALSE)
+
+CESMNov <- as.vector(CNov87)
+CESMNov <- data.frame(CESMNov)
+CESMNov <- data.matrix(CESMNov)
+CESMNov <- as.vector(CESMNov)
+
+Bias <- CESMNov - GRDCNov_agg
+
+##Bias Graphics## 
+
+limits = c(-200, 400)
+labels = c("-200", "0", "200", "400")
+breaks = c(-200, 0, 200, 400)
+
+map.world <- map_data(map = "world")
+p<-ggplot(map.world, aes(x = long, y = lat)) +
+  geom_polygon(aes(group = group), fill = "lightgrey", colour = "gray") +
+  theme(text= element_text(size = 16), legend.position="bottom") +
+  xlab(expression(paste("Longitude ("^"o",")"))) +
+  ylab(expression(paste("Latitude ("^"o",")"))) +
+  geom_point(data = as.data.frame(Bias), aes(x = CESM_lon, y = CESM_lat, colour = Bias), size = 0.5) +
+  coord_fixed(ratio = 1.25) +
+  scale_color_distiller(name = expression(paste("Bias between CESM and GRDC, November 1987 (mm/month)",sep="")),
+                        palette = "RdYlBu",
+                        limits = limits,
+                        labels = labels,
+                        breaks = breaks)
+p <- p + theme(legend.title = element_text(size = 13), 
+               legend.text = element_text(size = 7))
+show(p)
+
+############################## DECEMBER Aggregation ##############################
+total_runoff_vector <- as.vector(CDec87)
+flag_na <- is.na(total_runoff_vector)
+CESM_lat <- as.vector(lat2D)
+CESM_lat[flag_na] <- NA
+CESM_lon <- as.vector(lon2D)
+CESM_lon[flag_na] <- NA
+
+Dec87 <- t(Dec87)
+Dec87 <- Dec87[,order(ncol(Dec87):1)]
+GRDCDec<-Dec87
+GRDCDec_agg<-array(NA,55296)
+dLatCESM<-0.9424; dLonCESM<-1.25;
+for (i in 1:55296){
+  #cat(paste("********* ",i,"*******"),sep='\n')
+  edgeLat<-c(CESM_lat[i]-dLatCESM/2,CESM_lat[i]+dLatCESM/2)
+  edgeLon<-c(CESM_lon[i]-dLonCESM/2,CESM_lon[i]+dLonCESM/2)
+  isIn <- (urban_lat>edgeLat[1] & urban_lat<edgeLat[2] & urban_lon>edgeLon[1] & urban_lon<edgeLon[2])
+  GRDCDec_agg[i]<-mean(GRDCDec[isIn], na.rm = T)
+}
+GRDCflag<-is.na(GRDCDec_agg)
+GRDCDec_agg[GRDCflag]<-NA
+write.csv(GRDCDec_agg, "GRDC Dec87 Aggregation.csv", row.names = FALSE)
+
+CESMDec <- as.vector(CDec87)
+CESMDec <- data.frame(CESMDec)
+CESMDec <- data.matrix(CESMDec)
+CESMDec <- as.vector(CESMDec)
+
+Bias <- CESMDec - GRDCDec_agg
+
+##Bias Graphics## 
+
+limits = c(-200, 400)
+labels = c("-200", "0", "200", "400")
+breaks = c(-200, 0, 200, 400)
+
+map.world <- map_data(map = "world")
+p<-ggplot(map.world, aes(x = long, y = lat)) +
+  geom_polygon(aes(group = group), fill = "lightgrey", colour = "gray") +
+  theme(text= element_text(size = 16), legend.position="bottom") +
+  xlab(expression(paste("Longitude ("^"o",")"))) +
+  ylab(expression(paste("Latitude ("^"o",")"))) +
+  geom_point(data = as.data.frame(Bias), aes(x = CESM_lon, y = CESM_lat, colour = Bias), size = 0.5) +
+  coord_fixed(ratio = 1.25) +
+  scale_color_distiller(name = expression(paste("Bias between CESM and GRDC, December 1987 (mm/month)",sep="")),
                         palette = "RdYlBu",
                         limits = limits,
                         labels = labels,
