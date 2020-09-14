@@ -759,3 +759,297 @@ p<-ggplot(map.world, aes(x = long, y = lat)) +
 p <- p + theme(legend.title = element_text(size = 13), 
                legend.text = element_text(size = 7))
 show(p)
+
+############################## US JANUARY Aggregation #########################
+Bias <- CESMJan - GRDCJan_agg
+
+##Bias Graphics## 
+
+limits = c(-200, 400)
+labels = c("-200", "0", "200", "400")
+breaks = c(-200, 0, 200, 400)
+
+map.us <- map_data(map = "state")
+p<-ggplot(map.us, aes(x = long, y = lat)) +  xlim(-125, -69) + ylim(25, 50) +
+  geom_polygon(aes(group = group), fill = "lightgrey", colour = "gray") +
+  theme(text= element_text(size = 16), legend.position="bottom", panel.background = element_rect(fill="grey54")) +
+  xlab(expression(paste("Longitude ("^"o",")"))) +
+  ylab(expression(paste("Latitude ("^"o",")"))) +
+  geom_point(data = as.data.frame(Bias), aes(x = CESM_lon, y = CESM_lat, colour = Bias), size = 2) +
+  coord_fixed(ratio = 1.25) +
+  scale_color_distiller(name = expression(paste("Bias between CESM and GRDC, January 1987 (mm/month)",sep="")),
+                        palette = "RdYlBu",
+                        limits = limits,
+                        labels = labels,
+                        breaks = breaks)
+p <- p + theme(legend.title = element_text(size = 13), 
+               legend.text = element_text(size = 7))
+show(p)
+
+#panel.background = element_rect(fill="grey")
+
+############################## US FEBRUARY Aggregation #########################
+Bias <- CESMFeb - GRDCFeb_agg
+
+##Bias Graphics## 
+
+limits = c(-200, 400)
+labels = c("-200", "0", "200", "400")
+breaks = c(-200, 0, 200, 400)
+
+map.us <- map_data(map = "state")
+p<-ggplot(map.us, aes(x = long, y = lat)) +  xlim(-125, -69) + ylim(25, 50) +
+  geom_polygon(aes(group = group), fill = "lightgrey", colour = "gray") +
+  theme(text= element_text(size = 16), legend.position="bottom", panel.background = element_rect(fill="grey54")) +
+  xlab(expression(paste("Longitude ("^"o",")"))) +
+  ylab(expression(paste("Latitude ("^"o",")"))) +
+  geom_point(data = as.data.frame(Bias), aes(x = CESM_lon, y = CESM_lat, colour = Bias), size = 2) +
+  coord_fixed(ratio = 1.25) +
+  scale_color_distiller(name = expression(paste("Bias between CESM and GRDC, February 1987 (mm/month)",sep="")),
+                        palette = "RdYlBu",
+                        limits = limits,
+                        labels = labels,
+                        breaks = breaks)
+p <- p + theme(legend.title = element_text(size = 13), 
+               legend.text = element_text(size = 7))
+show(p)
+
+#panel.background = element_rect(fill="grey")
+
+############################## US MARCH Aggregation #########################
+Bias <- CESMMar - GRDCMar_agg
+
+##Bias Graphics## 
+
+limits = c(-200, 400)
+labels = c("-200", "0", "200", "400")
+breaks = c(-200, 0, 200, 400)
+
+map.us <- map_data(map = "state")
+p<-ggplot(map.us, aes(x = long, y = lat)) +  xlim(-125, -69) + ylim(25, 50) +
+  geom_polygon(aes(group = group), fill = "lightgrey", colour = "gray") +
+  theme(text= element_text(size = 16), legend.position="bottom", panel.background = element_rect(fill="grey54")) +
+  xlab(expression(paste("Longitude ("^"o",")"))) +
+  ylab(expression(paste("Latitude ("^"o",")"))) +
+  geom_point(data = as.data.frame(Bias), aes(x = CESM_lon, y = CESM_lat, colour = Bias), size = 2) +
+  coord_fixed(ratio = 1.25) +
+  scale_color_distiller(name = expression(paste("Bias between CESM and GRDC, March 1987 (mm/month)",sep="")),
+                        palette = "RdYlBu",
+                        limits = limits,
+                        labels = labels,
+                        breaks = breaks)
+p <- p + theme(legend.title = element_text(size = 13), 
+               legend.text = element_text(size = 7))
+show(p)
+
+#panel.background = element_rect(fill="grey")
+
+############################## US APRIL Aggregation #########################
+Bias <- CESMApr - GRDCApr_agg
+
+##Bias Graphics## 
+
+limits = c(-200, 400)
+labels = c("-200", "0", "200", "400")
+breaks = c(-200, 0, 200, 400)
+
+map.us <- map_data(map = "state")
+p<-ggplot(map.us, aes(x = long, y = lat)) +  xlim(-125, -69) + ylim(25, 50) +
+  geom_polygon(aes(group = group), fill = "lightgrey", colour = "gray") +
+  theme(text= element_text(size = 16), legend.position="bottom", panel.background = element_rect(fill="grey54")) +
+  xlab(expression(paste("Longitude ("^"o",")"))) +
+  ylab(expression(paste("Latitude ("^"o",")"))) +
+  geom_point(data = as.data.frame(Bias), aes(x = CESM_lon, y = CESM_lat, colour = Bias), size = 2) +
+  coord_fixed(ratio = 1.25) +
+  scale_color_distiller(name = expression(paste("Bias between CESM and GRDC, April 1987 (mm/month)",sep="")),
+                        palette = "RdYlBu",
+                        limits = limits,
+                        labels = labels,
+                        breaks = breaks)
+p <- p + theme(legend.title = element_text(size = 13), 
+               legend.text = element_text(size = 7))
+show(p)
+
+############################## US JUNE Aggregation #########################
+Bias <- CESMJun - GRDCJun_agg
+
+##Bias Graphics## 
+
+limits = c(-200, 400)
+labels = c("-200", "0", "200", "400")
+breaks = c(-200, 0, 200, 400)
+
+map.us <- map_data(map = "state")
+p<-ggplot(map.us, aes(x = long, y = lat)) +  xlim(-125, -69) + ylim(25, 50) +
+  geom_polygon(aes(group = group), fill = "lightgrey", colour = "gray") +
+  theme(text= element_text(size = 16), legend.position="bottom", panel.background = element_rect(fill="grey54")) +
+  xlab(expression(paste("Longitude ("^"o",")"))) +
+  ylab(expression(paste("Latitude ("^"o",")"))) +
+  geom_point(data = as.data.frame(Bias), aes(x = CESM_lon, y = CESM_lat, colour = Bias), size = 2) +
+  coord_fixed(ratio = 1.25) +
+  scale_color_distiller(name = expression(paste("Bias between CESM and GRDC, June 1987 (mm/month)",sep="")),
+                        palette = "RdYlBu",
+                        limits = limits,
+                        labels = labels,
+                        breaks = breaks)
+p <- p + theme(legend.title = element_text(size = 13), 
+               legend.text = element_text(size = 7))
+show(p)
+
+############################## US JULY Aggregation #########################
+Bias <- CESMJul - GRDCJul_agg
+
+##Bias Graphics## 
+
+limits = c(-200, 400)
+labels = c("-200", "0", "200", "400")
+breaks = c(-200, 0, 200, 400)
+
+map.us <- map_data(map = "state")
+p<-ggplot(map.us, aes(x = long, y = lat)) +  xlim(-125, -69) + ylim(25, 50) +
+  geom_polygon(aes(group = group), fill = "lightgrey", colour = "gray") +
+  theme(text= element_text(size = 16), legend.position="bottom", panel.background = element_rect(fill="grey54")) +
+  xlab(expression(paste("Longitude ("^"o",")"))) +
+  ylab(expression(paste("Latitude ("^"o",")"))) +
+  geom_point(data = as.data.frame(Bias), aes(x = CESM_lon, y = CESM_lat, colour = Bias), size = 2) +
+  coord_fixed(ratio = 1.25) +
+  scale_color_distiller(name = expression(paste("Bias between CESM and GRDC, July 1987 (mm/month)",sep="")),
+                        palette = "RdYlBu",
+                        limits = limits,
+                        labels = labels,
+                        breaks = breaks)
+p <- p + theme(legend.title = element_text(size = 13), 
+               legend.text = element_text(size = 7))
+show(p)
+
+
+############################## US AUGUST Aggregation #########################
+Bias <- CESMAug - GRDCAug_agg
+
+##Bias Graphics## 
+
+limits = c(-200, 400)
+labels = c("-200", "0", "200", "400")
+breaks = c(-200, 0, 200, 400)
+
+map.us <- map_data(map = "state")
+p<-ggplot(map.us, aes(x = long, y = lat)) +  xlim(-125, -69) + ylim(25, 50) +
+  geom_polygon(aes(group = group), fill = "lightgrey", colour = "gray") +
+  theme(text= element_text(size = 16), legend.position="bottom", panel.background = element_rect(fill="grey54")) +
+  xlab(expression(paste("Longitude ("^"o",")"))) +
+  ylab(expression(paste("Latitude ("^"o",")"))) +
+  geom_point(data = as.data.frame(Bias), aes(x = CESM_lon, y = CESM_lat, colour = Bias), size = 2) +
+  coord_fixed(ratio = 1.25) +
+  scale_color_distiller(name = expression(paste("Bias between CESM and GRDC, August 1987 (mm/month)",sep="")),
+                        palette = "RdYlBu",
+                        limits = limits,
+                        labels = labels,
+                        breaks = breaks)
+p <- p + theme(legend.title = element_text(size = 13), 
+               legend.text = element_text(size = 7))
+show(p)
+
+############################## US SEPTEMBER Aggregation #########################
+Bias <- CESMSep - GRDCSep_agg
+
+##Bias Graphics## 
+
+limits = c(-200, 400)
+labels = c("-200", "0", "200", "400")
+breaks = c(-200, 0, 200, 400)
+
+map.us <- map_data(map = "state")
+p<-ggplot(map.us, aes(x = long, y = lat)) +  xlim(-125, -69) + ylim(25, 50) +
+  geom_polygon(aes(group = group), fill = "lightgrey", colour = "gray") +
+  theme(text= element_text(size = 16), legend.position="bottom", panel.background = element_rect(fill="grey54")) +
+  xlab(expression(paste("Longitude ("^"o",")"))) +
+  ylab(expression(paste("Latitude ("^"o",")"))) +
+  geom_point(data = as.data.frame(Bias), aes(x = CESM_lon, y = CESM_lat, colour = Bias), size = 2) +
+  coord_fixed(ratio = 1.25) +
+  scale_color_distiller(name = expression(paste("Bias between CESM and GRDC, September 1987 (mm/month)",sep="")),
+                        palette = "RdYlBu",
+                        limits = limits,
+                        labels = labels,
+                        breaks = breaks)
+p <- p + theme(legend.title = element_text(size = 13), 
+               legend.text = element_text(size = 7))
+show(p)
+
+############################## US OCTOBER Aggregation #########################
+Bias <- CESMOct - GRDCOct_agg
+
+##Bias Graphics## 
+
+limits = c(-200, 400)
+labels = c("-200", "0", "200", "400")
+breaks = c(-200, 0, 200, 400)
+
+map.us <- map_data(map = "state")
+p<-ggplot(map.us, aes(x = long, y = lat)) +  xlim(-125, -69) + ylim(25, 50) +
+  geom_polygon(aes(group = group), fill = "lightgrey", colour = "gray") +
+  theme(text= element_text(size = 16), legend.position="bottom", panel.background = element_rect(fill="grey54")) +
+  xlab(expression(paste("Longitude ("^"o",")"))) +
+  ylab(expression(paste("Latitude ("^"o",")"))) +
+  geom_point(data = as.data.frame(Bias), aes(x = CESM_lon, y = CESM_lat, colour = Bias), size = 2) +
+  coord_fixed(ratio = 1.25) +
+  scale_color_distiller(name = expression(paste("Bias between CESM and GRDC, October 1987 (mm/month)",sep="")),
+                        palette = "RdYlBu",
+                        limits = limits,
+                        labels = labels,
+                        breaks = breaks)
+p <- p + theme(legend.title = element_text(size = 13), 
+               legend.text = element_text(size = 7))
+show(p)
+
+############################## US NOVEMBER Aggregation #########################
+Bias <- CESMNov - GRDCNov_agg
+
+##Bias Graphics## 
+
+limits = c(-200, 400)
+labels = c("-200", "0", "200", "400")
+breaks = c(-200, 0, 200, 400)
+
+map.us <- map_data(map = "state")
+p<-ggplot(map.us, aes(x = long, y = lat)) +  xlim(-125, -69) + ylim(25, 50) +
+  geom_polygon(aes(group = group), fill = "lightgrey", colour = "gray") +
+  theme(text= element_text(size = 16), legend.position="bottom", panel.background = element_rect(fill="grey54")) +
+  xlab(expression(paste("Longitude ("^"o",")"))) +
+  ylab(expression(paste("Latitude ("^"o",")"))) +
+  geom_point(data = as.data.frame(Bias), aes(x = CESM_lon, y = CESM_lat, colour = Bias), size = 2) +
+  coord_fixed(ratio = 1.25) +
+  scale_color_distiller(name = expression(paste("Bias between CESM and GRDC, November 1987 (mm/month)",sep="")),
+                        palette = "RdYlBu",
+                        limits = limits,
+                        labels = labels,
+                        breaks = breaks)
+p <- p + theme(legend.title = element_text(size = 13), 
+               legend.text = element_text(size = 7))
+show(p)
+
+############################## US DECEMBER Aggregation #########################
+Bias <- CESMDec - GRDCDec_agg
+
+##Bias Graphics## 
+
+limits = c(-200, 400)
+labels = c("-200", "0", "200", "400")
+breaks = c(-200, 0, 200, 400)
+
+map.us <- map_data(map = "state")
+p<-ggplot(map.us, aes(x = long, y = lat)) +  xlim(-125, -69) + ylim(25, 50) +
+  geom_polygon(aes(group = group), fill = "lightgrey", colour = "gray") +
+  theme(text= element_text(size = 16), legend.position="bottom", panel.background = element_rect(fill="grey54")) +
+  xlab(expression(paste("Longitude ("^"o",")"))) +
+  ylab(expression(paste("Latitude ("^"o",")"))) +
+  geom_point(data = as.data.frame(Bias), aes(x = CESM_lon, y = CESM_lat, colour = Bias), size = 2) +
+  coord_fixed(ratio = 1.25) +
+  scale_color_distiller(name = expression(paste("Bias between CESM and GRDC, December 1987 (mm/month)",sep="")),
+                        palette = "RdYlBu",
+                        limits = limits,
+                        labels = labels,
+                        breaks = breaks)
+p <- p + theme(legend.title = element_text(size = 13), 
+               legend.text = element_text(size = 7))
+show(p)
+
