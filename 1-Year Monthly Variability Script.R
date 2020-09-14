@@ -870,6 +870,32 @@ p <- p + theme(legend.title = element_text(size = 13),
                legend.text = element_text(size = 7))
 show(p)
 
+############################## US MAY Aggregation #########################
+Bias <- CESMMay - GRDCMay_agg
+
+##Bias Graphics## 
+
+limits = c(-200, 400)
+labels = c("-200", "0", "200", "400")
+breaks = c(-200, 0, 200, 400)
+
+map.us <- map_data(map = "state")
+p<-ggplot(map.us, aes(x = long, y = lat)) +  xlim(-125, -69) + ylim(25, 50) +
+  geom_polygon(aes(group = group), fill = "lightgrey", colour = "gray") +
+  theme(text= element_text(size = 16), legend.position="bottom", panel.background = element_rect(fill="grey54")) +
+  xlab(expression(paste("Longitude ("^"o",")"))) +
+  ylab(expression(paste("Latitude ("^"o",")"))) +
+  geom_point(data = as.data.frame(Bias), aes(x = CESM_lon, y = CESM_lat, colour = Bias), size = 2) +
+  coord_fixed(ratio = 1.25) +
+  scale_color_distiller(name = expression(paste("Bias between CESM and GRDC, May 1987 (mm/month)",sep="")),
+                        palette = "RdYlBu",
+                        limits = limits,
+                        labels = labels,
+                        breaks = breaks)
+p <- p + theme(legend.title = element_text(size = 13), 
+               legend.text = element_text(size = 7))
+show(p)
+
 ############################## US JUNE Aggregation #########################
 Bias <- CESMJun - GRDCJun_agg
 
