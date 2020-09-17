@@ -1079,3 +1079,71 @@ p <- p + theme(legend.title = element_text(size = 13),
                legend.text = element_text(size = 7))
 show(p)
 
+
+############################## Statistical Analysis ############################
+#Make sure the csv files you are working with have been edited to include the month
+#in one column labeled "month" and the other column is labeled "Value"
+January <- read.csv("~/GRDC Jan87 Aggregation.csv", header = TRUE)
+February <- read.csv("~/GRDC Feb87 Aggregation.csv", header = TRUE)
+March <- read.csv("~/GRDC Mar87 Aggregation.csv", header = TRUE)
+April <- read.csv("~/GRDC Apr87 Aggregation.csv", header = TRUE)
+May <- read.csv("~/GRDC May87 Aggregation.csv", header = TRUE)
+June <- read.csv("~/GRDC Jun87 Aggregation.csv", header = TRUE)
+July <- read.csv("~/GRDC Jul87 Aggregation.csv", header = TRUE)
+August <- read.csv("~/GRDC Aug87 Aggregation.csv", header = TRUE)
+September <- read.csv("~/GRDC Sep87 Aggregation.csv", header = TRUE)
+October <- read.csv("~/GRDC Oct87 Aggregation.csv", header = TRUE)
+November <- read.csv("~/GRDC Nov87 Aggregation.csv", header = TRUE)
+December <- read.csv("~/GRDC Dec87 Aggregation.csv", header = TRUE)
+
+FullYrAgg <- rbind(January, February)
+FullYrAgg <- rbind(FullYrAgg, March)
+FullYrAgg <- rbind(FullYrAgg, April)
+FullYrAgg <- rbind(FullYrAgg, May)
+FullYrAgg <- rbind(FullYrAgg, June)
+FullYrAgg <- rbind(FullYrAgg, July)
+FullYrAgg <- rbind(FullYrAgg, August)
+FullYrAgg <- rbind(FullYrAgg, September)
+FullYrAgg <- rbind(FullYrAgg, October)
+FullYrAgg <- rbind(FullYrAgg, November)
+FullYrAgg <- rbind(FullYrAgg, December)
+
+res.aov <- aov(Value ~ Month, data=FullYrAgg)
+summary(res.aov)
+plot(res.aov)
+
+library(car)
+LT <- leveneTest(Value ~ Month, data=FullYrAgg)
+summary(LT)
+
+library(EnvStats)
+rosnerTest(FullYrAgg$Value, k = 4, alpha = 0.05, warn = TRUE)
+
+##assuming no homogeneity of variance
+diff.aov <- oneway.test(Value ~ Month, data=FullYrAgg)
+summary(diff.aov)
+
+library(referenceIntervals)
+out <- cook.outliers(FullYrAgg$Value)$outliers
+install.packages("referenceIntervals")
+
+############################## Gabby's Advice ###################################
+#create linear model
+model = lm(Value ~ Month, data = FullYrAgg)
+fixed_model = lm(Value ~ Month, subset = cooks.distance(model) <= 4 / length(cooks.distance((model))), data = FullYrAgg)
+plot(fixed_model, which = 2)
+
+#rstandard(model)[abs(rstandard(model)) > 2]
+cd_model <- cooks.distance(model)
+sum(cd_model > 4 / length(cd_model)) 
+
+fixed_model <- lm(log(Value) ~ Month, subset = cd_model < 4 / length(cd_model), data = FullYrAgg)
+plot(fixed_model, which = 2, ylim = c(0, 20))
+
+shapiro.test(resid(model))
+
+
+
+
+
+
