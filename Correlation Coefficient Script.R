@@ -4012,6 +4012,7 @@ GRDCJan87_agg <- read.csv("GRDC Jan87 Aggregation.csv", header = TRUE)
 GRDCJan87_agg <- data.frame(GRDCJan87_agg$Value)
 GRDCJan87_agg <- data.matrix(GRDCJan87_agg)
 GRDCJan87_agg <- as.vector(GRDCJan87_agg)
+#GRDCJan87_agg <- vec2array(GRDCJan87_agg)
 GRDCFeb87_agg <- read.csv("GRDC Feb87 Aggregation.csv", header = TRUE)
 GRDCFeb87_agg <- data.frame(GRDCFeb87_agg$Value)
 GRDCFeb87_agg <- data.matrix(GRDCFeb87_agg)
@@ -4086,11 +4087,16 @@ FullAgg <- array(c(GRDCJan86_agg, GRDCFeb86_agg, GRDCMar86_agg, GRDCApr86_agg, G
                    GRDCMar95_agg, GRDCApr95_agg, GRDCMay95_agg, GRDCJun95_agg, GRDCJul95_agg, 
                    GRDCAug95_agg, GRDCSep95_agg, GRDCOct95_agg, GRDCNov95_agg, GRDCDec94_agg), 
                  dim = c(1, 55296, 120))
+
+###################### Calculating Correlation Coefficient ###########################
 library(arrayhelpers)
-vector1 <- c(1,2,3)
-vector2 <- c(4,5,6)
-df <- array(c(vector1, vector2), dim = (c(3, 3)))
-print(df)
-vectordf <- as.vector(df)
-print(vectordf)
+#This is what the code needs to get to, in process
+#rho_runoff <- array(NA, dim = 1:288, 1:192) ??
+#for (lat in 1:288) {
+#  for (lon in 1:192) {
+#    rho_runoff(lat, lon) <- cor(GRDC(lat, lon), CESM(lat,lon))
+#  }
+#}
+
+
 
