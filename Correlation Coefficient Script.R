@@ -4006,13 +4006,12 @@ GRDCDec95_agg[GRDCflag]<-NA
 write.csv(GRDCDec95_agg, "GRDC Dec95 Aggregation.csv", row.names = FALSE)
 
 
-############################## Pulling 1987 Files ##############################
+######################## Pulling 1987 Files & Prepping Full Dataframes ##############################
 setwd("/Users/lauragray")
 GRDCJan87_agg <- read.csv("GRDC Jan87 Aggregation.csv", header = TRUE)
 GRDCJan87_agg <- data.frame(GRDCJan87_agg$Value)
 GRDCJan87_agg <- data.matrix(GRDCJan87_agg)
 GRDCJan87_agg <- as.vector(GRDCJan87_agg)
-#GRDCJan87_agg <- vec2array(GRDCJan87_agg)
 GRDCFeb87_agg <- read.csv("GRDC Feb87 Aggregation.csv", header = TRUE)
 GRDCFeb87_agg <- data.frame(GRDCFeb87_agg$Value)
 GRDCFeb87_agg <- data.matrix(GRDCFeb87_agg)
@@ -4062,8 +4061,8 @@ Array1987 <- array(c(GRDCJan87_agg, GRDCFeb87_agg, GRDCMar87_agg, GRDCApr87_agg,
                      GRDCJun87_agg, GRDCJul87_agg, GRDCAug87_agg, GRDCSep87_agg, GRDCOct87_agg,
                      GRDCNov87_agg, GRDCDec87_agg), dim = c(1, 55296, 12))
 
-FullAgg <- array(c(GRDCJan86_agg, GRDCFeb86_agg, GRDCMar86_agg, GRDCApr86_agg, GRDCMay86_agg,
-                   GRDCJun86_agg, GRDCJul86_agg, GRDCAug86_agg, GRDCSep86_agg, GRDCOct86_agg,
+GRDCAgg <- data.frame(GRDCJan86_agg, GRDCFeb86_agg, GRDCMar86_agg, GRDCApr86_agg, GRDCMay86_agg,
+                    GRDCJun86_agg, GRDCJul86_agg, GRDCAug86_agg, GRDCSep86_agg, GRDCOct86_agg,
                    GRDCNov86_agg, GRDCDec86_agg, GRDCJan87_agg, GRDCFeb87_agg, GRDCMar87_agg, 
                    GRDCApr87_agg, GRDCMay87_agg, GRDCJun87_agg, GRDCJul87_agg, GRDCAug87_agg, 
                    GRDCSep87_agg, GRDCOct87_agg, GRDCNov87_agg, GRDCDec87_agg, GRDCJan88_agg, 
@@ -4085,18 +4084,46 @@ FullAgg <- array(c(GRDCJan86_agg, GRDCFeb86_agg, GRDCMar86_agg, GRDCApr86_agg, G
                    GRDCMay94_agg, GRDCJun94_agg, GRDCJul94_agg, GRDCAug94_agg, GRDCSep94_agg, 
                    GRDCOct94_agg, GRDCNov94_agg, GRDCDec94_agg, GRDCJan95_agg, GRDCFeb95_agg, 
                    GRDCMar95_agg, GRDCApr95_agg, GRDCMay95_agg, GRDCJun95_agg, GRDCJul95_agg, 
-                   GRDCAug95_agg, GRDCSep95_agg, GRDCOct95_agg, GRDCNov95_agg, GRDCDec94_agg), 
-                 dim = c(1, 55296, 120))
+                   GRDCAug95_agg, GRDCSep95_agg, GRDCOct95_agg, GRDCNov95_agg, GRDCDec94_agg)
+
+CESM <- data.frame(as.vector(CJan86), as.vector(CFeb86), as.vector(CMar86), as.vector(CApr86), 
+                   as.vector(CMay86), as.vector(CJun86), as.vector(CJul86), as.vector(CAug86), 
+                   as.vector(CSep86), as.vector(COct86), as.vector(CNov86), as.vector(CDec86), 
+                   as.vector(CJan87), as.vector(CFeb87), as.vector(CMar87), as.vector(CApr87), 
+                   as.vector(CMay87), as.vector(CJun87), as.vector(CJul87), as.vector(CAug87), 
+                   as.vector(CSep87), as.vector(COct87), as.vector(CNov87), as.vector(CDec87), 
+                   as.vector(CJan88), as.vector(CFeb88), as.vector(CMar88), as.vector(CApr88), 
+                   as.vector(CMay88), as.vector(CJun88), as.vector(CJul88), as.vector(CAug88), 
+                   as.vector(CSep88), as.vector(COct88), as.vector(CNov88), as.vector(CDec88),
+                   as.vector(CJan89), as.vector(CFeb89), as.vector(CMar89), as.vector(CApr89), 
+                   as.vector(CMay89), as.vector(CJun89), as.vector(CJul89), as.vector(CAug89), 
+                   as.vector(CSep89), as.vector(COct89), as.vector(CNov89), as.vector(CDec89), 
+                   as.vector(CJan90), as.vector(CFeb90), as.vector(CMar90), as.vector(CApr90), 
+                   as.vector(CMay90), as.vector(CJun90), as.vector(CJul90), as.vector(CAug90), 
+                   as.vector(CSep90), as.vector(COct90), as.vector(CNov90), as.vector(CDec90), 
+                   as.vector(CJan91), as.vector(CFeb91), as.vector(CMar91), as.vector(CApr91), 
+                   as.vector(CMay91), as.vector(CJun91), as.vector(CJul91), as.vector(CAug91), 
+                   as.vector(CSep91), as.vector(COct91), as.vector(CNov91), as.vector(CDec91), 
+                   as.vector(CJan92), as.vector(CFeb92), as.vector(CMar92), as.vector(CApr92), 
+                   as.vector(CMay92), as.vector(CJun92), as.vector(CJul92), as.vector(CAug92), 
+                   as.vector(CSep92), as.vector(COct92), as.vector(CNov92), as.vector(CDec92), 
+                   as.vector(CJan93), as.vector(CFeb93), as.vector(CMar93), as.vector(CApr93), 
+                   as.vector(CMay93), as.vector(CJun93), as.vector(CJul93), as.vector(CAug93), 
+                   as.vector(CSep93), as.vector(COct93), as.vector(CNov93), as.vector(CDec93), 
+                   as.vector(CJan94), as.vector(CFeb94), as.vector(CMar94), as.vector(CApr94), 
+                   as.vector(CMay94), as.vector(CJun94), as.vector(CJul94), as.vector(CAug94), 
+                   as.vector(CSep94), as.vector(COct94), as.vector(CNov94), as.vector(CDec94), 
+                   as.vector(CJan95), as.vector(CFeb95), as.vector(CMar95), as.vector(CApr95), 
+                   as.vector(CMay95), as.vector(CJun95), as.vector(CJul95), as.vector(CAug95), 
+                   as.vector(CSep95), as.vector(COct95), as.vector(CNov95), as.vector(CDec95))
 
 ###################### Calculating Correlation Coefficient ###########################
-library(arrayhelpers)
-#This is what the code needs to get to, in process
-#rho_runoff <- array(NA, dim = 1:288, 1:192) ??
-#for (lat in 1:288) {
-#  for (lon in 1:192) {
-#    rho_runoff(lat, lon) <- cor(GRDC(lat, lon), CESM(lat,lon))
-#  }
-#}
+
+rho_runoff <- array(NA, 55296)
+for (i in 1:55296) {
+   rho_runoff(i) <- cor(GRDCAgg(i,), CESM(i,))
+   }
+
 
 
 
