@@ -4061,6 +4061,7 @@ Array1987 <- array(c(GRDCJan87_agg, GRDCFeb87_agg, GRDCMar87_agg, GRDCApr87_agg,
                      GRDCJun87_agg, GRDCJul87_agg, GRDCAug87_agg, GRDCSep87_agg, GRDCOct87_agg,
                      GRDCNov87_agg, GRDCDec87_agg), dim = c(1, 55296, 12))
 
+mydata <- data.frame(seq(1,55296))
 GRDCAgg <- data.frame(GRDCJan86_agg, GRDCFeb86_agg, GRDCMar86_agg, GRDCApr86_agg, GRDCMay86_agg,
                     GRDCJun86_agg, GRDCJul86_agg, GRDCAug86_agg, GRDCSep86_agg, GRDCOct86_agg,
                    GRDCNov86_agg, GRDCDec86_agg, GRDCJan87_agg, GRDCFeb87_agg, GRDCMar87_agg, 
@@ -4085,8 +4086,8 @@ GRDCAgg <- data.frame(GRDCJan86_agg, GRDCFeb86_agg, GRDCMar86_agg, GRDCApr86_agg
                    GRDCOct94_agg, GRDCNov94_agg, GRDCDec94_agg, GRDCJan95_agg, GRDCFeb95_agg, 
                    GRDCMar95_agg, GRDCApr95_agg, GRDCMay95_agg, GRDCJun95_agg, GRDCJul95_agg, 
                    GRDCAug95_agg, GRDCSep95_agg, GRDCOct95_agg, GRDCNov95_agg, GRDCDec94_agg)
-
-CESM <- data.frame(as.vector(CJan86), as.vector(CFeb86), as.vector(CMar86), as.vector(CApr86), 
+#GRDCAgg <- as.vector(GRDCAgg)
+FullCESM <- data.frame(as.vector(CJan86), as.vector(CFeb86), as.vector(CMar86), as.vector(CApr86), 
                    as.vector(CMay86), as.vector(CJun86), as.vector(CJul86), as.vector(CAug86), 
                    as.vector(CSep86), as.vector(COct86), as.vector(CNov86), as.vector(CDec86), 
                    as.vector(CJan87), as.vector(CFeb87), as.vector(CMar87), as.vector(CApr87), 
@@ -4116,14 +4117,54 @@ CESM <- data.frame(as.vector(CJan86), as.vector(CFeb86), as.vector(CMar86), as.v
                    as.vector(CJan95), as.vector(CFeb95), as.vector(CMar95), as.vector(CApr95), 
                    as.vector(CMay95), as.vector(CJun95), as.vector(CJul95), as.vector(CAug95), 
                    as.vector(CSep95), as.vector(COct95), as.vector(CNov95), as.vector(CDec95))
-
+#FullCESM <- as.vector(FullCESM)
 ###################### Calculating Correlation Coefficient ###########################
-
 rho_runoff <- array(NA, 55296)
 for (i in 1:55296) {
-   rho_runoff(i) <- cor(GRDCAgg(i,), CESM(i,))
-   }
+   rho_runoff[i] <- cor(GRDCAgg[i,], FullCESM[i,], use = "pairwise.complete.obs")
+}
 
+library(ncdf4)
+library(ggplot2)
+library(maps)
+workdir <- "/Users/lauragray"
+setwd(workdir)
+fi <- nc_open("clm50_release-clm5.0.20_1deg_GSWP3V1_isofix2_hist.clm2.h0.QOVER.185001-201412.nc")
+
+#lon
+lon <- ncvar_get(fi, "lon")
+lon2D <- kronecker(matrix(1, 1, 192), lon)
+lon2D[!is.na(lon2D) & lon2D >= 180] <- lon2D[!is.na(lon2D) & lon2D >= 180] - 360
+
+#lat
+lat <- ncvar_get(fi, "lat", verbose = F)
+lat <- data.frame(lat)
+lat <- t(lat)
+lat2D <- kronecker(matrix(1, 288, 1), lat)
+urban_lat <- as.vector(lat2D)
+urban_lon <- as.vector(lon2D)
+
+#graphics
+limits = c(0.0, 700)
+labels = c("0","100", "200", "300", "400", "500", "600", "700")
+breaks = c(0, 100, 200, 300, 400, 500, 600, 700)
+
+map.world <- map_data(map = "world")
+p<-ggplot(map.world, aes(x = long, y = lat)) +
+  geom_polygon(aes(group = group), fill = "lightgrey", colour = "gray") +
+  theme(text= element_text(size = 16), legend.position="bottom") +
+  xlab(expression(paste("Longitude ("^"o",")"))) +
+  ylab(expression(paste("Latitude ("^"o",")"))) +
+  geom_point(data = as.data.frame(rho_runoff), aes(x = urban_lon, y = urban_lat, colour = rho_runoff), size = 0.5) +
+  coord_fixed(ratio = 1.25) +
+  scale_color_distiller(name = expression(paste("Correlation Coefficient",sep="")),
+                        palette = "Spectral")
+                        #limits = limits,
+                        #labels = labels,
+                        #breaks = breaks)
+p <- p + theme(legend.title = element_text(size = 13), 
+               legend.text = element_text(size = 7))
+show(p)
 
 
 
