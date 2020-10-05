@@ -1084,17 +1084,65 @@ show(p)
 #Make sure the csv files you are working with have been edited to include the month
 #in one column labeled "month" and the other column is labeled "Value"
 January <- read.csv("~/GRDC Jan87 Aggregation.csv", header = TRUE)
+JanuaryBias <- January$Value - (as.vector(CJan87))
+JanuaryBias <- data.frame(January$Month, JanuaryBias)
+names(JanuaryBias)[names(JanuaryBias)=="January.Month"] <- "Month"
+names(JanuaryBias)[names(JanuaryBias)=="JanuaryBias"] <- "Bias"
 February <- read.csv("~/GRDC Feb87 Aggregation.csv", header = TRUE)
+FebruaryBias <- February$Value - (as.vector(CFeb87))
+FebruaryBias <- data.frame(February$Month, FebruaryBias)
+names(FebruaryBias)[names(FebruaryBias)=="February.Month"] <- "Month"
+names(FebruaryBias)[names(FebruaryBias)=="FebruaryBias"] <- "Bias"
 March <- read.csv("~/GRDC Mar87 Aggregation.csv", header = TRUE)
+MarchBias <- March$Value - (as.vector(CMar87))
+MarchBias <- data.frame(March$Month, MarchBias)
+names(MarchBias)[names(MarchBias)=="March.Month"] <- "Month"
+names(MarchBias)[names(MarchBias)=="MarchBias"] <- "Bias"
 April <- read.csv("~/GRDC Apr87 Aggregation.csv", header = TRUE)
+AprilBias <- April$Value - (as.vector(CApr87))
+AprilBias <- data.frame(April$Month, AprilBias)
+names(AprilBias)[names(AprilBias)=="April.Month"] <- "Month"
+names(AprilBias)[names(AprilBias)=="AprilBias"] <- "Bias"
 May <- read.csv("~/GRDC May87 Aggregation.csv", header = TRUE)
+MayBias <- May$Value - (as.vector(CMay87))
+MayBias <- data.frame(May$Month, MayBias)
+names(MayBias)[names(MayBias)=="May.Month"] <- "Month"
+names(MayBias)[names(MayBias)=="MayBias"] <- "Bias"
 June <- read.csv("~/GRDC Jun87 Aggregation.csv", header = TRUE)
+JuneBias <- June$Value - (as.vector(CJun87))
+JuneBias <- data.frame(June$Month, JuneBias)
+names(JuneBias)[names(JuneBias)=="June.Month"] <- "Month"
+names(JuneBias)[names(JuneBias)=="JuneBias"] <- "Bias"
 July <- read.csv("~/GRDC Jul87 Aggregation.csv", header = TRUE)
+JulyBias <- July$Value - (as.vector(CJul87))
+JulyBias <- data.frame(July$Month, JulyBias)
+names(JulyBias)[names(JulyBias)=="July.Month"] <- "Month"
+names(JulyBias)[names(JulyBias)=="JulyBias"] <- "Bias"
 August <- read.csv("~/GRDC Aug87 Aggregation.csv", header = TRUE)
+AugustBias <- August$Value - (as.vector(CAug87))
+AugustBias <- data.frame(August$Month, AugustBias)
+names(AugustBias)[names(AugustBias)=="August.Month"] <- "Month"
+names(AugustBias)[names(AugustBias)=="AugustBias"] <- "Bias"
 September <- read.csv("~/GRDC Sep87 Aggregation.csv", header = TRUE)
+SeptemberBias <- September$Value - (as.vector(CSep87))
+SeptemberBias <- data.frame(September$Month, SeptemberBias)
+names(SeptemberBias)[names(SeptemberBias)=="September.Month"] <- "Month"
+names(SeptemberBias)[names(SeptemberBias)=="SeptemberBias"] <- "Bias"
 October <- read.csv("~/GRDC Oct87 Aggregation.csv", header = TRUE)
+OctoberBias <- October$Value - (as.vector(COct87))
+OctoberBias <- data.frame(October$Month, OctoberBias)
+names(OctoberBias)[names(OctoberBias)=="October.Month"] <- "Month"
+names(OctoberBias)[names(OctoberBias)=="OctoberBias"] <- "Bias"
 November <- read.csv("~/GRDC Nov87 Aggregation.csv", header = TRUE)
+NovemberBias <- November$Value - (as.vector(CNov87))
+NovemberBias <- data.frame(November$Month, NovemberBias)
+names(NovemberBias)[names(NovemberBias)=="November.Month"] <- "Month"
+names(NovemberBias)[names(NovemberBias)=="NovemberBias"] <- "Bias"
 December <- read.csv("~/GRDC Dec87 Aggregation.csv", header = TRUE)
+DecemberBias <- December$Value - (as.vector(CDec87))
+DecemberBias <- data.frame(December$Month, DecemberBias)
+names(DecemberBias)[names(DecemberBias)=="December.Month"] <- "Month"
+names(DecemberBias)[names(DecemberBias)=="DecemberBias"] <- "Bias"
 
 FullYrAgg <- rbind(January, February)
 FullYrAgg <- rbind(FullYrAgg, March)
@@ -1108,9 +1156,75 @@ FullYrAgg <- rbind(FullYrAgg, October)
 FullYrAgg <- rbind(FullYrAgg, November)
 FullYrAgg <- rbind(FullYrAgg, December)
 
+FullYrBias <- rbind(JanuaryBias, FebruaryBias)
+FullYrBias <- rbind(FullYrBias, MarchBias)
+FullYrBias <- rbind(FullYrBias, AprilBias)
+FullYrBias <- rbind(FullYrBias, MayBias)
+FullYrBias <- rbind(FullYrBias, JuneBias)
+FullYrBias <- rbind(FullYrBias, JulyBias)
+FullYrBias <- rbind(FullYrBias, AugustBias)
+FullYrBias <- rbind(FullYrBias, SeptemberBias)
+FullYrBias <- rbind(FullYrBias, OctoberBias)
+FullYrBias <- rbind(FullYrBias, NovemberBias)
+FullYrBias <- rbind(FullYrBias, DecemberBias)
+
+#Anova test for general difference between the months
 res.aov <- aov(Value ~ Month, data=FullYrAgg)
 summary(res.aov)
 plot(res.aov)
+
+#Anova test for bias difference between the months
+bias.aov <- aov(Bias ~ Month, data=FullYrBias)
+summary(bias.aov)
+plot(bias.aov)
+
+#lognormal check
+library(dplyr)
+FullYrAgglog <- log10(FullYrAgg$Value)
+FullYrAgglog <- FullYrAgglog %>% dplyr::na_if(-Inf)
+FullYrAgglog <- FullYrAgglog %>% dplyr::na_if(Inf)
+FullYrAgglog <- FullYrAgglog %>% dplyr::na_if(NaN)
+FullYrAgglog <- data.frame(FullYrAgg$Month, FullYrAgglog)
+names(FullYrAgglog)[names(FullYrAgglog)=="FullYrAgg.Month"] <- "Month"
+names(FullYrAgglog)[names(FullYrAgglog)=="FullYrAgglog"] <- "Value"
+model = lm(Value ~ Month, data = FullYrAgglog)
+anova = anova(model)
+summary(anova)
+plot(anova)
+qqnorm(FullYrAgglog$Value, pch = 1, frame = FALSE)
+qqline(FullYrAgglog$Value, col = "steelblue", lwd = 2)
+qqnorm(FullYrAgg$Value, pch = 1, frame = FALSE)
+qqline(FullYrAgg$Value, col = "steelblue", lwd = 2)
+
+#Removing NA values from the dataframe
+FullYrAgg <- FullYrAgg[complete.cases(FullYrAgg),]
+
+#Removing Outliers from dataframe and plotting a QQ Plot of the rest
+Q <- quantile(FullYrAgg$Value, probs=c(.25, .75), na.rm = FALSE)
+iqr <- IQR(FullYrAgg$Value)
+up <- Q[2]+1.5*iqr #Upper Range
+low <- Q[1]-1.5*iqr #Lower Range
+eliminated <- subset(FullYrAgg, FullYrAgg$Value > (Q[1] - 1.5*iqr) & FullYrAgg$Value < (Q[2] + 1.5*iqr))
+qqnorm(eliminated$Value, pch = 1, frame = FALSE)
+qqline(eliminated$Value, col = "steelblue", lwd = 2)
+logeliminated <- data.frame(eliminated$Month, log10(eliminated$Value))
+logeliminated <- logeliminated %>% dplyr::na_if(-Inf)
+logeliminated <- logeliminated %>% dplyr::na_if(Inf)
+qqnorm(logeliminated$log10.eliminated.Value., pch = 1, frame = FALSE)
+qqline(logeliminated$log10.eliminated.Value., col = "steelblue", lwd = 2)
+
+#Removing NA values from the Bias dataframe
+FullYrBias <- FullYrBias[complete.cases(FullYrBias),]
+
+#Removing Outliers from dataframe and plotting a QQ Plot of the rest
+Q <- quantile(FullYrBias$Bias, probs=c(.25, .75), na.rm = FALSE)
+iqr <- IQR(FullYrBias$Bias)
+up <- Q[2]+1.5*iqr #Upper Range
+low <- Q[1]-1.5*iqr #Lower Range
+eliminated <- subset(FullYrBias, FullYrBias$Bias > (Q[1] - 1.5*iqr) & FullYrBias$Bias < (Q[2] + 1.5*iqr))
+qqnorm(eliminated$Bias, pch = 1, frame = FALSE)
+qqline(eliminated$Bias, col = "steelblue", lwd = 2)
+
 
 library(car)
 LT <- leveneTest(Value ~ Month, data=FullYrAgg)
