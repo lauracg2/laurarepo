@@ -4086,7 +4086,8 @@ GRDCAgg <- data.frame(GRDCJan86_agg, GRDCFeb86_agg, GRDCMar86_agg, GRDCApr86_agg
                    GRDCOct94_agg, GRDCNov94_agg, GRDCDec94_agg, GRDCJan95_agg, GRDCFeb95_agg, 
                    GRDCMar95_agg, GRDCApr95_agg, GRDCMay95_agg, GRDCJun95_agg, GRDCJul95_agg, 
                    GRDCAug95_agg, GRDCSep95_agg, GRDCOct95_agg, GRDCNov95_agg, GRDCDec94_agg)
-#GRDCAgg <- as.vector(GRDCAgg)
+GRDCAgg <- as.vector(GRDCAgg)
+write.csv(GRDCAgg, "GRDC Full Aggregation Data.csv", row.names = FALSE)
 FullCESM <- data.frame(as.vector(CJan86), as.vector(CFeb86), as.vector(CMar86), as.vector(CApr86), 
                    as.vector(CMay86), as.vector(CJun86), as.vector(CJul86), as.vector(CAug86), 
                    as.vector(CSep86), as.vector(COct86), as.vector(CNov86), as.vector(CDec86), 
@@ -4117,7 +4118,9 @@ FullCESM <- data.frame(as.vector(CJan86), as.vector(CFeb86), as.vector(CMar86), 
                    as.vector(CJan95), as.vector(CFeb95), as.vector(CMar95), as.vector(CApr95), 
                    as.vector(CMay95), as.vector(CJun95), as.vector(CJul95), as.vector(CAug95), 
                    as.vector(CSep95), as.vector(COct95), as.vector(CNov95), as.vector(CDec95))
-#FullCESM <- as.vector(FullCESM)
+FullCESM <- as.vector(FullCESM)
+write.csv(FullCESM, "CESM Full Data 1986-1995.csv", row.names = FALSE)
+
 ###################### Calculating Correlation Coefficient ###########################
 rho_runoff <- array(NA, 55296)
 for (i in 1:55296) {
