@@ -40,29 +40,32 @@ for (year in 1986:1995){
     grdcnames = rbind(grdcnames, data.frame(filename))
   }
 }
-
+grdcnames = as.list(grdcnames)
 
 GRDCfiles <- NULL
 for (i in grdcnames) {
-  grdcdata[i] <- read.ascii.grid(i, return.header=FALSE, print = 0,
-                              nodata.values = c(), at.once = TRUE, na.strings = "NA")
+  #grdcdata[[i]] <- 
+  read.ascii.grid(i, return.header=FALSE, print = 0,
+    nodata.values = c(), at.once = TRUE, na.strings = "NA")
   
    i <- i+1
    #GRDCfiles <- rbind(GRDCfiles, data.frame(grdcdata))
 }
 
+'????????? I truly am not sure how to proceed'
 
-
-GRDC_agg<-array(NA,c(288,192))
-dLatCESM<-0.9424; dLonCESM<-1.25;
-for (i in 1:288) {
-  for (j in 1:192) {
-    cat(paste("********* ",as.character(i), ",", as.character(j), " *******"),sep='\n')
-    edgeLat<-c(lat2D[i,j]-dLatCESM/2,lat2D[i,j]+dLatCESM/2)
-    edgeLon<-c(lon2D[i,j]-dLonCESM/2,lon2D[i,j]+dLonCESM/2)
-    isIn <- (GRDClat2D>edgeLat[1] & GRDClat2D<edgeLat[2] & GRDClon2D>edgeLon[1] & GRDClon2D<edgeLon[2])
-    sum(sum(isIn,na.rm = T))
-    GRDC_agg[i,j]<-mean(Jan86[isIn], na.rm = T)
+for (file in GRDCfiles) {
+  GRDC_agg[file]<-array(NA,c(288,192,120))
+  dLatCESM<-0.9424; dLonCESM<-1.25;
+  for (i in 1:288) {
+    for (j in 1:192) {
+      cat(paste("********* ",as.character(i), ",", as.character(j), " *******"),sep='\n')
+      edgeLat<-c(lat2D[i,j]-dLatCESM/2,lat2D[i,j]+dLatCESM/2)
+      edgeLon<-c(lon2D[i,j]-dLonCESM/2,lon2D[i,j]+dLonCESM/2)
+      isIn <- (GRDClat2D>edgeLat[1] & GRDClat2D<edgeLat[2] & GRDClon2D>edgeLon[1] & GRDClon2D<edgeLon[2])
+      sum(sum(isIn,na.rm = T))
+      GRDC_agg[i,j]<-mean(file[isIn], na.rm = T)
+    }
   }
 }
 
