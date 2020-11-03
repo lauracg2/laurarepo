@@ -1,4 +1,4 @@
-rm(list = ls(all=TRUE))
+#rm(list = ls(all=TRUE))
 library(RSAGA)
 library(maps)
 library(ggplot2)
@@ -926,12 +926,14 @@ for (i in 1:55296){
 }
 GRDCflag<-is.na(GRDC_agg)
 GRDC_agg[GRDCflag]<-NA
+write.csv(GRDC_agg, "10 YR Avg GRDC.csv", row.names= FALSE)
 
 CESM <- data.frame(total_runoff_vector)
 CESM <- data.matrix(CESM)
 CESM <- as.vector(CESM)
 
 Bias <- CESM - GRDC_agg
+#write.csv(Bias, "Overall CESM vs GRDC Bias.csv", row.names = FALSE)
 
 ##Bias Graphics## 
 
