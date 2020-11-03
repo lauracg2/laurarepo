@@ -20,7 +20,8 @@ surface_runoff_array <- ncvar_get(fi, "QRUNOFF")
 CJan86 <- surface_runoff_array[, , 1633]
 CJan86 <- CJan86*3600*24*31
 
-data <- array(data = NA, dim = c(360, 720, 120))
+data <- array(data = NA, dim = c(360, 720))
+data <- data.frame(data)
 for (year in 1986:1995){
   for (month in 1:12) {
     filename <- paste0("comp_runoff_hd_",sprintf("%04d",year),sprintf("%02d",month),".asc")
@@ -30,6 +31,26 @@ for (year in 1986:1995){
     i <- i+1
   }
 }
+
+grdcnames <- NULL
+for (year in 1986:1995){
+  for (month in 1:12) {
+    filename<- paste0("comp_runoff_hd_",sprintf("%04d",year),sprintf("%02d",month),".asc")
+    print(filename)
+    grdcnames = rbind(grdcnames, data.frame(filename))
+  }
+}
+
+
+GRDCfiles <- NULL
+for (i in grdcnames) {
+  grdcdata[i] <- read.ascii.grid(i, return.header=FALSE, print = 0,
+                              nodata.values = c(), at.once = TRUE, na.strings = "NA")
+  
+   i <- i+1
+   #GRDCfiles <- rbind(GRDCfiles, data.frame(grdcdata))
+}
+
 
 
 GRDC_agg<-array(NA,c(288,192))
