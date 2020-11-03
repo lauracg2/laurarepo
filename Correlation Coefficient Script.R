@@ -707,15 +707,14 @@ GRDCJan86<-Jan86
 GRDCJan86_agg<-array(NA,55296)
 dLatCESM<-0.9424; dLonCESM<-1.25;
 for (i in 1:55296){
-  #cat(paste("********* ",i,"*******"),sep='\n')
   edgeLat<-c(CESM_lat[i]-dLatCESM/2,CESM_lat[i]+dLatCESM/2)
   edgeLon<-c(CESM_lon[i]-dLonCESM/2,CESM_lon[i]+dLonCESM/2)
   isIn <- (urban_lat>edgeLat[1] & urban_lat<edgeLat[2] & urban_lon>edgeLon[1] & urban_lon<edgeLon[2])
   GRDCJan86_agg[i]<-mean(GRDCJan86[isIn], na.rm = T)
 }
-GRDCflag<-is.na(GRDCJan86_agg)
-GRDCJan86_agg[GRDCflag]<-NA
-write.csv(GRDCJan86_agg, "GRDC Jan86 Aggregation.csv", row.names = FALSE)
+#GRDCflag<-is.na(GRDCJan86_agg)
+#GRDCJan86_agg[GRDCflag]<-NA
+write.csv(GRDCJan86_agg, "GRDC Jan86 Aggregation New.csv", row.names = FALSE)
 
 ############################## FEBRUARY 1986 Aggregation ##############################
 total_runoff_vector <- as.vector(CFeb86)
@@ -4169,5 +4168,37 @@ p <- p + theme(legend.title = element_text(size = 13),
                legend.text = element_text(size = 7))
 show(p)
 
+GRDCFeb87_agg <- read.csv("GRDC Feb87 Aggregation.csv", header = TRUE)
 
+
+
+
+############# Looking at the Difference Between MERRA-2 and GRDC 10 Year Avg ############################
+GRDC10YR <- read.csv("~/10 YR Avg GRDC.csv", header = TRUE)
+MERRA10YR <- read.csv("~/10 YR Avg MERRA-2.csv", header = TRUE)
+
+Diff <- MERRA10YR - GRDC10YR
+Diff <- as.data.frame(Diff)
+Diff <- unlist(Diff)
+Diff <- as.vector(Diff)
+
+
+limits = c(-150, 150)
+labels = c("-150","-100", "-50", "0", "50", "100", "150")
+breaks = c(-150, -100, -50, 0, 50, 100, 150)
+p<-ggplot(map.world, aes(x = long, y = lat)) +
+  geom_polygon(aes(group = group), fill = "lightgrey", colour = "gray") +
+  theme(text= element_text(size = 16), legend.position="bottom") +
+  xlab(expression(paste("Longitude ("^"o",")"))) +
+  ylab(expression(paste("Latitude ("^"o",")"))) +
+  geom_point(data = as.data.frame(Diff), aes(x = urban_lon, y = urban_lat, colour = Diff), size = 0.5) +
+  coord_fixed(ratio = 1.25) +
+  scale_color_distiller(name = expression(paste("Difference between MERRA-2 and GRDC Average",sep="")),
+                        palette = "Spectral",
+                        limits = limits,
+                        labels = labels,
+                        breaks = breaks)
+p <- p + theme(legend.title = element_text(size = 13), 
+               legend.text = element_text(size = 7))
+show(p)
 
