@@ -545,6 +545,7 @@ for (i in 1:55296){
 }
 MERRAflag<-is.na(MERRA_agg)
 MERRA_agg[MERRAflag]<-NA
+write.csv(MERRA_agg, "10 YR Avg MERRA-2.csv", row.names= FALSE)
 
 CESM <- data.frame(total_runoff_vector)
 CESM <- data.matrix(CESM)
