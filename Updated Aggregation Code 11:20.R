@@ -46,11 +46,12 @@ for (year in 1986:1995){
 
 
 ####### Trying to get this for loop to read in all of the ascii files at once, does not work currently ################
-#grdcnames = as.list(grdcnames)
+grdcnames = as.list(grdcnames)
+grdcnames = data.frame(grdcnames)
 
 GRDCfiles <- NULL
 for (i in grdcnames) {
-  grdcdata <- read.ascii.grid(grdcnames[i,1], return.header=FALSE, print = 0,
+  grdcdata <- read.ascii.grid(grdcnames[i, 1], return.header=FALSE, print = 0,
               nodata.values = c(), at.once = TRUE, na.strings = "NA")
   i <- i+1
   GRDCfiles <- rbind(GRDCfiles, data.frame(grdcdata))
