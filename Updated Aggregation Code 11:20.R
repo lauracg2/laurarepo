@@ -40,28 +40,20 @@ for (year in 1986:1995){
   for (month in 1:12) {
     filename<- paste0("comp_runoff_hd_",sprintf("%04d",year),sprintf("%02d",month),".asc")
     print(filename)
-    grdcnames = rbind(grdcnames, data.frame(filename))
+    grdcnames = rbind(grdcnames, filename)
   }
 }
 
 
 ####### Trying to get this for loop to read in all of the ascii files at once, does not work currently ################
-grdcnames = as.list(grdcnames)
-grdcnames = data.frame(grdcnames)
 
-GRDCfiles <- NULL
-for (i in grdcnames) {
+GRDC_m <- array(NA, c(360, 720, 120))
+for (i in 1:length(grdcnames)) {
   grdcdata <- read.ascii.grid(grdcnames[i, 1], return.header=FALSE, print = 0,
               nodata.values = c(), at.once = TRUE, na.strings = "NA")
-  i <- i+1
-  GRDCfiles <- rbind(GRDCfiles, data.frame(grdcdata))
+  GRDC_m[ , , i] <- grdcdata
 }
 
-for (i in grdcnames) {
-  print(i)
-}
-
-'????????? I truly am not sure how to proceed'
 
 ############## Projected for loop once I get the previous one working ##################
 #how I think the overall aggregation for loop should look (something like this ?)
