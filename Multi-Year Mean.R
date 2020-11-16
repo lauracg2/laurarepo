@@ -915,24 +915,26 @@ CESM_lon[flag_na] <- NA
 
 
 GRDC<-Mean10YR
-GRDC_agg<-array(NA,55296)
+GRDC_mean_agg<-array(NA,55296)
 dLatCESM<-0.9424; dLonCESM<-1.25;
 for (i in 1:55296){
   #cat(paste("********* ",i,"*******"),sep='\n')
   edgeLat<-c(CESM_lat[i]-dLatCESM/2,CESM_lat[i]+dLatCESM/2)
   edgeLon<-c(CESM_lon[i]-dLonCESM/2,CESM_lon[i]+dLonCESM/2)
   isIn <- (urban_lat>edgeLat[1] & urban_lat<edgeLat[2] & urban_lon>edgeLon[1] & urban_lon<edgeLon[2])
-  GRDC_agg[i]<-mean(GRDC[isIn], na.rm = T)
+  GRDC_mean_agg[i]<-mean(GRDC[isIn], na.rm = T)
 }
-GRDCflag<-is.na(GRDC_agg)
-GRDC_agg[GRDCflag]<-NA
-write.csv(GRDC_agg, "10 YR Avg GRDC.csv", row.names= FALSE)
+GRDCflag<-is.na(GRDC_mean_agg)
+GRDC_mean_agg[GRDCflag]<-NA
+write.csv(GRDC_mean_agg, "10 YR Avg GRDC.csv", row.names= FALSE)
 
 CESM <- data.frame(total_runoff_vector)
 CESM <- data.matrix(CESM)
 CESM <- as.vector(CESM)
 
-Bias <- CESM - GRDC_agg
+GRDC_mean_agg <- read.csv("10 YR Avg GRDC.csv", header =TRUE)
+GRDC_mean_agg <- unlist(GRDC_mean_agg)
+Bias <- CESM - GRDC_mean_agg
 #write.csv(Bias, "Overall CESM vs GRDC Bias.csv", row.names = FALSE)
 
 ##Bias Graphics## 
@@ -944,22 +946,19 @@ breaks = c(-200, 0, 200, 400)
 map.world <- map_data(map = "world")
 p<-ggplot(map.world, aes(x = long, y = lat)) +
   geom_polygon(aes(group = group), fill = "lightgrey", colour = "gray") +
-  theme(text= element_text(size = 16), legend.position="bottom") +
+  theme(text= element_text(size = 18), legend.position="bottom", plot.title = element_text(size = 18, face = "bold", margin=margin(20,0,20,0, unit="pt"))) +
   xlab(expression(paste("Longitude ("^"o",")"))) +
   ylab(expression(paste("Latitude ("^"o",")"))) +
+  ggtitle("Average Monthly Bias between CESM Simulations and UNH-GRDC from 1986 to 1995") +
   geom_point(data = as.data.frame(Bias), aes(x = CESM_lon, y = CESM_lat, colour = Bias), size = 0.5) +
   coord_fixed(ratio = 1.25) +
-  scale_color_distiller(name = expression(paste("Average Monthly Bias from 1986 to 1995 (mm/month)",sep="")),
-                        palette = "RdYlBu",
+  scale_color_distiller(name = expression(paste("Average Monthly Bias from 1986 to 1995 (mm/month)     ",sep="")),
+                        palette = "BrBG",
                         limits = limits,
                         labels = labels,
-                        breaks = breaks)
-p <- p + theme(legend.title = element_text(size = 13), 
-               legend.text = element_text(size = 7))
+                        breaks = breaks,
+                        direction = -1)
+p <- p + theme(legend.title = element_text(size = 16), 
+               legend.text = element_text(size = 14))
 show(p)
-
-############################ Correlation Coefficient ##########################
-Correlation <- cor(CESM, GRDC_agg)
-
-library(GGally)
 
