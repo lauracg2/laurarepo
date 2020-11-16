@@ -550,9 +550,10 @@ write.csv(MERRA_agg, "10 YR Avg MERRA-2.csv", row.names= FALSE)
 CESM <- data.frame(total_runoff_vector)
 CESM <- data.matrix(CESM)
 CESM <- as.vector(CESM)
-
+CESM <- data.frame(CESM)
 Bias <- CESM - MERRA_agg
-
+Bias <- unlist(Bias)
+Bias <- as.vector(Bias)
 ##Bias Graphics## 
 
 limits = c(-200, 400)
@@ -562,18 +563,19 @@ breaks = c(-200, 0, 200, 400)
 map.world <- map_data(map = "world")
 p<-ggplot(map.world, aes(x = long, y = lat)) +
   geom_polygon(aes(group = group), fill = "lightgrey", colour = "gray") +
-  theme(text= element_text(size = 16), legend.position="bottom") +
+  theme(text= element_text(size = 18), legend.position="bottom", plot.title = element_text(size = 18, face = "bold", margin=margin(20,0,20,0, unit="pt"))) +
   xlab(expression(paste("Longitude ("^"o",")"))) +
   ylab(expression(paste("Latitude ("^"o",")"))) +
+  ggtitle("Average Monthly Bias between CESM Simulations and MERRA-2 from 1986 to 1995") +
   geom_point(data = as.data.frame(Bias), aes(x = CESM_lon, y = CESM_lat, colour = Bias), size = 0.5) +
   coord_fixed(ratio = 1.25) +
   scale_color_distiller(name = expression(paste("Average Monthly Bias from 1986 to 1995 (mm/month)",sep="")),
-                        palette = "RdYlBu",
+                        palette = "GnBu",
                         limits = limits,
                         labels = labels,
                         breaks = breaks)
-p <- p + theme(legend.title = element_text(size = 13), 
-               legend.text = element_text(size = 7))
+p <- p + theme(legend.title = element_text(size = 16), 
+               legend.text = element_text(size = 14))
 show(p)
 
 
@@ -588,13 +590,13 @@ breaks = c(0, 100, 200, 300, 400, 500, 600, 700)
 map.world <- map_data(map = "world")
 p<-ggplot(map.world, aes(x = long, y = lat)) +
   geom_polygon(aes(group = group), fill = "lightgrey", colour = "gray") +
-  theme(text= element_text(size = 16), legend.position="bottom") +
+  theme(text= element_text(size = 18), legend.position="bottom") +
   xlab(expression(paste("Longitude ("^"o",")"))) +
   ylab(expression(paste("Latitude ("^"o",")"))) +
   geom_point(data = as.data.frame(MERRA_agg), aes(x = CESM_lon, y = CESM_lat, colour = MERRA_agg), size = 0.5) +
   coord_fixed(ratio = 1.25) +
   scale_color_distiller(name = expression(paste("MERRA-2 Aggregated Average from 1986 to 1995 (mm/month)",sep="")),
-                        palette = "RdYlBu",
+                        palette = "YlOrRd",
                         limits = limits,
                         labels = labels,
                         breaks = breaks)
