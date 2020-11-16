@@ -19,7 +19,7 @@ for (year in 1986:1995){
 GRDC_m <- array(NA, c(720, 360, 120))
 for (i in 1:length(grdcnames)) {
   grdcdata <- read.ascii.grid(grdcnames[i, 1], return.header=FALSE, print = 0,
-              nodata.values = c(), at.once = TRUE, na.strings = "NA")
+                              nodata.values = c(), at.once = TRUE, na.strings = "NA")
   grdcdata <- t(grdcdata)
   grdcdata <- grdcdata[,order(ncol(grdcdata):1)]
   grdcdata <- grdcdata %>% dplyr::na_if(-88)
@@ -71,8 +71,8 @@ CESM_lon[flag_na] <- NA
 
 ############## Projected for loop once I get the previous one working ##################
 #how I think the overall aggregation for loop should look (something like this ?)
-GRDC_agg1 <- array(NA,c(288,192,120))
-for (k in 1:60) {
+GRDC_agg2 <- array(NA,c(288,192,120))
+for (k in 61:120) {
   cat(paste("********* ",as.character(k)," *******"),sep='\n')
   dLatCESM<-0.9424; dLonCESM<-1.25;
   for (i in 1:288) {
@@ -82,11 +82,10 @@ for (k in 1:60) {
       edgeLon<-c(lon2D[i,j]-dLonCESM/2,lon2D[i,j]+dLonCESM/2)
       isIn <- (GRDClat2D>edgeLat[1] & GRDClat2D<edgeLat[2] & GRDClon2D>edgeLon[1] & GRDClon2D<edgeLon[2])
       sum(sum(isIn,na.rm = T))
-      GRDC_agg1[i,j,k]<-mean(GRDC_m[,,k][isIn], na.rm = T)
+      GRDC_agg2[i,j,k]<-mean(GRDC_m[,,k][isIn], na.rm = T)
     }
   }
 }
 
-save(list = c("GRDC_m", "GRDC_agg1"), file = "GRDC_Aggregation1.RData")
+save(list = c("GRDC_m", "GRDC_agg2"), file = "GRDC_Aggregation2.RData")
 load("GRDC_Aggregation.RData")
-
