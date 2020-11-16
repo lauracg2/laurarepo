@@ -4121,10 +4121,12 @@ FullCESM <- as.vector(FullCESM)
 write.csv(FullCESM, "CESM Full Data 1986-1995.csv", row.names = FALSE)
 
 ###################### Calculating Correlation Coefficient ###########################
-rho_runoff <- array(NA, 55296)
-for (i in 1:55296) {
-   rho_runoff[i] <- cor(GRDCAgg[i,], FullCESM[i,], use = "pairwise.complete.obs")
-}
+rho_runoff <- array(NA, c(288,192))
+for (i in 1:288) {
+  for (j in 1:192) {
+   rho_runoff[i,j] <- cor(GRDCAgg[i,j,], FullCESM[i,j,], use = "pairwise.complete.obs")
+  }
+}  
 
 library(ncdf4)
 library(ggplot2)
