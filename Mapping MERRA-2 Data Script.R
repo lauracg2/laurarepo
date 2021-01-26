@@ -526,11 +526,6 @@ lat2D <- kronecker(matrix(1, 288, 1), lat)
 
 CESM <- read.csv(file = "CESM10YRMean.csv")
 total_runoff_vector <- as.vector(CESM)
-flag_na <- is.na(total_runoff_vector)
-CESM_lat <- as.vector(lat2D)
-CESM_lat[flag_na] <- NA
-CESM_lon <- as.vector(lon2D)
-CESM_lon[flag_na] <- NA
 
 
 MERRA<-Mean10YR
@@ -546,6 +541,7 @@ for (i in 1:55296){
 MERRAflag<-is.na(MERRA_agg)
 MERRA_agg[MERRAflag]<-NA
 write.csv(MERRA_agg, "10 YR Avg MERRA-2.csv", row.names= FALSE)
+MERRA_agg <- read.csv("10 YR AVG MERRA-2.csv", header=TRUE)
 
 CESM <- data.frame(total_runoff_vector)
 CESM <- data.matrix(CESM)
@@ -554,7 +550,22 @@ CESM <- data.frame(CESM)
 Bias <- CESM - MERRA_agg
 Bias <- unlist(Bias)
 Bias <- as.vector(Bias)
+library(stats)
+library(hydroGOF)
+sd_MERRA <- sd(Bias, na.rm = TRUE)
+mean_MERRA <- mean(Bias, na.rm = TRUE)
+quantile(Bias, c(.05, .95), na.rm = TRUE)
+quantile(Bias, c(.25, .75), na.rm = TRUE)
+rmse(CESM, MERRA_agg, na.rm = TRUE)
+t.test(CESM, MERRA_agg)
+
 ##Bias Graphics## 
+
+flag_na <- is.na(Bias)
+CESM_lat <- as.vector(lat2D)
+CESM_lat[flag_na] <- NA
+CESM_lon <- as.vector(lon2D)
+CESM_lon[flag_na] <- NA
 
 limits = c(-200, 400)
 labels = c("-200", "0", "200", "400")
@@ -562,46 +573,89 @@ breaks = c(-200, 0, 200, 400)
 
 map.world <- map_data(map = "world")
 p<-ggplot(map.world, aes(x = long, y = lat)) +
-  geom_polygon(aes(group = group), fill = "lightgrey", colour = "gray") +
-  theme(text= element_text(size = 18), legend.position="bottom", plot.title = element_text(size = 18, face = "bold", margin=margin(20,0,20,0, unit="pt"))) +
+  geom_polygon(aes(group = group), fill = "grey54", colour = "grey50") +
+  theme(text= element_text(size = 18), legend.position="bottom", 
+        plot.title = element_text(size = 18, face = "bold", margin=margin(20,0,20,0, unit="pt")),
+        panel.background = element_rect(fill = "grey63", colour = "grey63")) +
   xlab(expression(paste("Longitude ("^"o",")"))) +
   ylab(expression(paste("Latitude ("^"o",")"))) +
   ggtitle("Average Monthly Bias between CESM Simulations and MERRA-2 from 1986 to 1995") +
   geom_point(data = as.data.frame(Bias), aes(x = CESM_lon, y = CESM_lat, colour = Bias), size = 0.5) +
   coord_fixed(ratio = 1.25) +
-  scale_color_distiller(name = expression(paste("Average Monthly Bias from 1986 to 1995 (mm/month)",sep="")),
-                        palette = "GnBu",
+  scale_color_distiller(name = expression(paste("Average Monthly Bias from 1986 to 1995 (mm/month)     ",sep="")),
+                        palette = "BrBG",
                         limits = limits,
                         labels = labels,
-                        breaks = breaks)
+                        breaks = breaks,
+                        direction = 1)
 p <- p + theme(legend.title = element_text(size = 16), 
                legend.text = element_text(size = 14))
 show(p)
 
 
+##Absolute Value Bias Graphics## 
+Bias <- CESM - MERRA_agg
+Abs_Bias <- abs(Bias)
+Abs_Bias <- unlist(Abs_Bias)
+Abs_Bias <- as.vector(Abs_Bias)
+flag_na <- is.na(Abs_Bias)
+CESM_lat <- as.vector(lat2D)
+CESM_lat[flag_na] <- NA
+CESM_lon <- as.vector(lon2D)
+CESM_lon[flag_na] <- NA
 
+limits = c(-200, 400)
+labels = c("-200", "0", "200", "400")
+breaks = c(-200, 0, 200, 400)
 
-
-##MERRA Agg##
-limits = c(0.0, 700)
-labels = c("0","100", "200", "300", "400", "500", "600", "700")
-breaks = c(0, 100, 200, 300, 400, 500, 600, 700)
 
 map.world <- map_data(map = "world")
 p<-ggplot(map.world, aes(x = long, y = lat)) +
-  geom_polygon(aes(group = group), fill = "lightgrey", colour = "gray") +
-  theme(text= element_text(size = 18), legend.position="bottom") +
+  geom_polygon(aes(group = group), fill = "grey54", colour = "grey50") +
+  theme(text= element_text(size = 18), legend.position="bottom", 
+        plot.title = element_text(size = 18, face = "bold", margin=margin(20,0,20,0, unit="pt")),
+        panel.background = element_rect(fill = "grey63", colour = "grey63")) +
   xlab(expression(paste("Longitude ("^"o",")"))) +
   ylab(expression(paste("Latitude ("^"o",")"))) +
-  geom_point(data = as.data.frame(MERRA_agg), aes(x = CESM_lon, y = CESM_lat, colour = MERRA_agg), size = 0.5) +
+  ggtitle("Absolute Average Monthly Bias between CESM Simulations and MERRA-2 from 1986 to 1995") +
+  geom_point(data = as.data.frame(Abs_Bias), aes(x = CESM_lon, y = CESM_lat, colour = Abs_Bias), size = 0.5) +
   coord_fixed(ratio = 1.25) +
-  scale_color_distiller(name = expression(paste("MERRA-2 Aggregated Average from 1986 to 1995 (mm/month)",sep="")),
-                        palette = "YlOrRd",
-                        limits = limits,
-                        labels = labels,
-                        breaks = breaks)
-p <- p + theme(legend.title = element_text(size = 13), 
-               legend.text = element_text(size = 7))
+  scale_color_distiller(name = expression(paste("Average Monthly Bias from 1986 to 1995 (mm/month)     ",sep="")),
+                        palette = "BrBG",
+                        #limits = limits,
+                        #labels = labels,
+                        #breaks = breaks,
+                        direction = 1)
+p <- p + theme(legend.title = element_text(size = 16), 
+               legend.text = element_text(size = 10))
 show(p)
 
+
+MERRA_agg <- unlist(MERRA_agg)
+MERRA_agg <- as.vector(MERRA_agg)
+flag_na <- is.na(MERRA_agg)
+CESM_lat <- as.vector(lat2D)
+CESM_lat[flag_na] <- NA
+CESM_lon <- as.vector(lon2D)
+CESM_lon[flag_na] <- NA
+
+p<-ggplot(map.world, aes(x = long, y = lat)) +
+  geom_polygon(aes(group = group), fill = "grey54", colour = "grey50") +
+  theme(text= element_text(size = 18), legend.position="bottom", 
+        plot.title = element_text(size = 18, face = "bold", margin=margin(20,0,20,0, unit="pt")),
+        panel.background = element_rect(fill = "grey63", colour = "grey63")) +
+  xlab(expression(paste("Longitude ("^"o",")"))) +
+  ylab(expression(paste("Latitude ("^"o",")"))) +
+  ggtitle("Aggregated Average Monthly Runoff MERRA-2 from 1986 to 1995") +
+  geom_point(data = as.data.frame(MERRA_agg), aes(x = CESM_lon, y = CESM_lat, colour = MERRA_agg), size = 0.5) +
+  coord_fixed(ratio = 1.25) +
+  scale_color_distiller(name = expression(paste("Average Monthly Runoff 1986 to 1995 (mm/month)     ",sep="")),
+                        palette = "BrBG",
+                        #limits = limits,
+                        #labels = labels,
+                        #breaks = breaks,
+                        direction = 1)
+p <- p + theme(legend.title = element_text(size = 16), 
+               legend.text = element_text(size = 10))
+show(p)
 

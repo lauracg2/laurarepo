@@ -905,15 +905,6 @@ lat <- t(lat)
 lat2D <- kronecker(matrix(1, 288, 1), lat)
 
 
-CESM <- read.csv(file = "CESM10YRMean.csv")
-total_runoff_vector <- as.vector(CESM)
-flag_na <- is.na(total_runoff_vector)
-CESM_lat <- as.vector(lat2D)
-CESM_lat[flag_na] <- NA
-CESM_lon <- as.vector(lon2D)
-CESM_lon[flag_na] <- NA
-
-
 GRDC<-Mean10YR
 GRDC_mean_agg<-array(NA,55296)
 dLatCESM<-0.9424; dLonCESM<-1.25;
@@ -928,6 +919,9 @@ GRDCflag<-is.na(GRDC_mean_agg)
 GRDC_mean_agg[GRDCflag]<-NA
 write.csv(GRDC_mean_agg, "10 YR Avg GRDC.csv", row.names= FALSE)
 
+CESM <- read.csv(file = "CESM10YRMean.csv")
+total_runoff_vector <- as.vector(CESM)
+
 CESM <- data.frame(total_runoff_vector)
 CESM <- data.matrix(CESM)
 CESM <- as.vector(CESM)
@@ -935,18 +929,36 @@ CESM <- as.vector(CESM)
 GRDC_mean_agg <- read.csv("10 YR Avg GRDC.csv", header =TRUE)
 GRDC_mean_agg <- unlist(GRDC_mean_agg)
 Bias <- CESM - GRDC_mean_agg
+
+library(stats)
+sd_GRDC <- sd(Bias, na.rm = TRUE)
+mean_GRDC <- mean(Bias, na.rm = TRUE)
+quantile(Bias, c(.05, .95), na.rm = TRUE)
+quantile(Bias, c(.25, .75), na.rm = TRUE)
+rmse(CESM, GRDC_mean_agg, na.rm = TRUE)
+t.test(CESM, GRDC_mean_agg)
+#5%=-26.89743, 95%=38.16570
+
 #write.csv(Bias, "Overall CESM vs GRDC Bias.csv", row.names = FALSE)
 
 ##Bias Graphics## 
+flag_na <- is.na(Bias)
+CESM_lat <- as.vector(lat2D)
+CESM_lat[flag_na] <- NA
+CESM_lon <- as.vector(lon2D)
+CESM_lon[flag_na] <- NA
 
 limits = c(-200, 400)
 labels = c("-200", "0", "200", "400")
 breaks = c(-200, 0, 200, 400)
 
+
 map.world <- map_data(map = "world")
 p<-ggplot(map.world, aes(x = long, y = lat)) +
-  geom_polygon(aes(group = group), fill = "lightgrey", colour = "gray") +
-  theme(text= element_text(size = 18), legend.position="bottom", plot.title = element_text(size = 18, face = "bold", margin=margin(20,0,20,0, unit="pt"))) +
+  geom_polygon(aes(group = group), fill = "grey54", colour = "grey50") +
+  theme(text= element_text(size = 18), legend.position="bottom", 
+        plot.title = element_text(size = 18, face = "bold", margin=margin(20,0,20,0, unit="pt")),
+        panel.background = element_rect(fill = "grey63", colour = "grey63")) +
   xlab(expression(paste("Longitude ("^"o",")"))) +
   ylab(expression(paste("Latitude ("^"o",")"))) +
   ggtitle("Average Monthly Bias between CESM Simulations and UNH-GRDC from 1986 to 1995") +
@@ -957,8 +969,42 @@ p<-ggplot(map.world, aes(x = long, y = lat)) +
                         limits = limits,
                         labels = labels,
                         breaks = breaks,
-                        direction = -1)
+                        direction = 1)
 p <- p + theme(legend.title = element_text(size = 16), 
                legend.text = element_text(size = 14))
 show(p)
 
+
+##Absolute Value Bias Graphics## 
+Abs_Bias <- abs(CESM-GRDC_mean_agg)
+flag_na <- is.na(Abs_Bias)
+CESM_lat <- as.vector(lat2D)
+CESM_lat[flag_na] <- NA
+CESM_lon <- as.vector(lon2D)
+CESM_lon[flag_na] <- NA
+
+limits = c(-200, 400)
+labels = c("-200", "0", "200", "400")
+breaks = c(-200, 0, 200, 400)
+
+
+map.world <- map_data(map = "world")
+p<-ggplot(map.world, aes(x = long, y = lat)) +
+  geom_polygon(aes(group = group), fill = "grey54", colour = "grey50") +
+  theme(text= element_text(size = 18), legend.position="bottom", 
+        plot.title = element_text(size = 18, face = "bold", margin=margin(20,0,20,0, unit="pt")),
+        panel.background = element_rect(fill = "grey63", colour = "grey63")) +
+  xlab(expression(paste("Longitude ("^"o",")"))) +
+  ylab(expression(paste("Latitude ("^"o",")"))) +
+  ggtitle("Average Monthly Bias between CESM Simulations and UNH-GRDC from 1986 to 1995") +
+  geom_point(data = as.data.frame(Abs_Bias), aes(x = CESM_lon, y = CESM_lat, colour = Abs_Bias), size = 0.5) +
+  coord_fixed(ratio = 1.25) +
+  scale_color_distiller(name = expression(paste("Absolute Value Average Monthly Bias from 1986 to 1995 (mm/month)     ",sep="")),
+                        palette = "BrBG",
+                        #limits = limits,
+                        #labels = labels,
+                        #breaks = breaks,
+                        direction = 1)
+p <- p + theme(legend.title = element_text(size = 16), 
+               legend.text = element_text(size = 9))
+show(p)

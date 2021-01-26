@@ -271,7 +271,9 @@ FullCESM <- array(c(CJan86, CFeb86, CMar86, CApr86, CMay86, CJun86, CJul86, CAug
                   CJan94, CFeb94, CMar94, CApr94, CMay94, CJun94, CJul94, CAug94, CSep94, COct94, CNov94, CDec94,
                   CJan95, CFeb95, CMar95, CApr95, CMay95, CJun95, CJul95, CAug95, CSep95, COct95, CNov95, CDec95), dim = c(288, 192, 120))
 
-########################### CORRELATION COEFFICIENT #############################
+########################### CORRELATION COEFFICIENT GRDC #############################
+workdir <- "/Users/lauragray/Downloads/Research/laurarepo"
+setwd(workdir)
 load("GRDC_Aggregation1.RData")
 load("GRDC_Aggregation2.RData")
 GRDC_agg <- array(NA, c(288,192,120))
@@ -311,28 +313,107 @@ lat2D <- kronecker(matrix(1, 288, 1), lat)
 urban_lat <- as.vector(lat2D)
 urban_lon <- as.vector(lon2D)
 
+urban_lon[is.na(rho_runoff)]<-NA
+urban_lat[is.na(rho_runoff)]<-NA
+
 #graphics
-limits = c(0.0, 700)
-labels = c("0","100", "200", "300", "400", "500", "600", "700")
-breaks = c(0, 100, 200, 300, 400, 500, 600, 700)
+limits = c(-1.0, 1.0)
+labels = c("-1.0","0","1.0")
+breaks = c(-1.0, 0, 1.0)
 
 rho_runoff <- as.vector(rho_runoff)
 map.world <- map_data(map = "world")
 p<-ggplot(map.world, aes(x = long, y = lat)) +
-  geom_polygon(aes(group = group), fill = "lightgrey", colour = "gray") +
-  theme(text= element_text(size = 16), legend.position="bottom") +
+  geom_polygon(aes(group = group), fill = "grey54", colour = "grey50") +
+  theme(text= element_text(size = 16), legend.position="bottom",
+        plot.title = element_text(size = 18, face = "bold", margin=margin(20,0,20,0, unit="pt")),
+        panel.background = element_rect(fill = "grey63", colour = "grey63")) +
   xlab(expression(paste("Longitude ("^"o",")"))) +
   ylab(expression(paste("Latitude ("^"o",")"))) +
+  ggtitle("Overall Correlation Coefficient between CESM Simulations and UNH-GRDC for 1986 to 1995") +
   geom_point(data = as.data.frame(rho_runoff), aes(x = urban_lon, y = urban_lat, colour = rho_runoff), size = 0.5) +
   coord_fixed(ratio = 1.25) +
   scale_color_distiller(name = expression(paste("Correlation Coefficient",sep="")),
-                        palette = "OrRd")
-#limits = limits,
-#labels = labels,
-#breaks = breaks)
-p <- p + theme(legend.title = element_text(size = 13), 
-               legend.text = element_text(size = 7))
+                        palette = "BrBG",
+                        limits = limits,
+                        labels = labels,
+                        breaks = breaks,
+                        direction = 1)
+p <- p + theme(legend.title = element_text(size = 16), 
+               legend.text = element_text(size = 14))
 show(p)
 
-GRDCFeb87_agg <- read.csv("GRDC Feb87 Aggregation.csv", header = TRUE)
+
+########################### CORRELATION COEFFICIENT MERRA-2 #############################
+workdir <- "/Users/lauragray/Downloads/Research/laurarepo"
+setwd(workdir)
+load("MERRA_Aggregation1.RData")
+load("MERRA_Aggregation2.RData")
+MERRA_agg <- array(NA, c(288,192,120))
+for (i in 1:60) {
+  MERRA_agg[,,i] <- MERRA_agg1[,,i]
+}
+for (i in 61:120) {
+  MERRA_agg[,,i] <- MERRA_agg2[,,i]
+}
+MERRAflag<-is.na(MERRA_agg)
+MERRA_agg[MERRAflag]<-NA
+
+rho_runoff_MERRA <- array(NA, c(288,192))
+for (i in 1:288) {
+  for (j in 1:192) {
+    rho_runoff_MERRA[i,j] <- cor(MERRA_agg[i,j, ], FullCESM[i,j, ], use = "pairwise.complete.obs")
+  }
+}  
+
+library(ncdf4)
+library(ggplot2)
+library(maps)
+workdir <- "/Users/lauragray"
+setwd(workdir)
+fi <- nc_open("clm50_release-clm5.0.20_1deg_GSWP3V1_isofix2_hist.clm2.h0.QOVER.185001-201412.nc")
+
+#lon
+lon <- ncvar_get(fi, "lon")
+lon2D <- kronecker(matrix(1, 1, 192), lon)
+lon2D[!is.na(lon2D) & lon2D >= 180] <- lon2D[!is.na(lon2D) & lon2D >= 180] - 360
+
+#lat
+lat <- ncvar_get(fi, "lat", verbose = F)
+lat <- data.frame(lat)
+lat <- t(lat)
+lat2D <- kronecker(matrix(1, 288, 1), lat)
+urban_lat <- as.vector(lat2D)
+urban_lon <- as.vector(lon2D)
+
+#graphics
+limits = c(-1.0, 1.0)
+labels = c("-1.0","0","1.0")
+breaks = c(-1.0, 0, 1.0)
+
+urban_lon[is.na(rho_runoff_MERRA)]<-NA
+urban_lat[is.na(rho_runoff_MERRA)]<-NA
+
+
+rho_runoff_MERRA <- as.vector(rho_runoff_MERRA)
+map.world <- map_data(map = "world")
+p<-ggplot(map.world, aes(x = long, y = lat)) +
+  geom_polygon(aes(group = group), fill = "grey54", colour = "grey50") +
+  theme(text= element_text(size = 16), legend.position="bottom",
+        plot.title = element_text(size = 18, face = "bold", margin=margin(20,0,20,0, unit="pt")),
+        panel.background = element_rect(fill = "grey63", colour = "grey63")) +
+  xlab(expression(paste("Longitude ("^"o",")"))) +
+  ylab(expression(paste("Latitude ("^"o",")"))) +
+  ggtitle("Overall Correlation Coefficient between CESM Simulations and MERRA-2 for 1986 to 1995") +
+  geom_point(data = as.data.frame(rho_runoff_MERRA), aes(x = urban_lon, y = urban_lat, colour = rho_runoff_MERRA), size = 0.5) +
+  coord_fixed(ratio = 1.25) +
+  scale_color_distiller(name = expression(paste("Correlation Coefficient",sep="")),
+                        palette = "BrBG",
+                        limits = limits,
+                        labels = labels,
+                        breaks = breaks,
+                        direction = 1)
+p <- p + theme(legend.title = element_text(size = 16), 
+               legend.text = element_text(size = 14))
+show(p)
 
