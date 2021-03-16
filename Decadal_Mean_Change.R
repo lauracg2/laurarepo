@@ -9,19 +9,24 @@ library(tidyr)
 workdir <- "~/Downloads/Research/laurarepo"
 setwd(workdir)
 
+workdir <- "/glade/scratch/lgray"
+setwd(workdir)
 
 #####Getting the selected Urban Runoff Values and Obtaining the Weighted QRUNOFF_U for 2041-2050####
 fi <- nc_open("BSSP370cmip6.101.h2-mapped.QRUNOFF_U.201501-210012.nc")
+fi <- nc_open("/glade/scratch/xinchang/cmip6_h2_remapped/BSSP370cmip6.101.h2-mapped.QRUNOFF_U.201501-210012.nc")
 urban_runoff_array <- ncvar_get(fi, "QRUNOFF")
 urban_runoff_array_ <- array(NA, c(3, 288, 192, 120))
+urban_runoff_list <- as.numeric(c(312:431))
 for (i in 1:120) {
-  for (j in 312:431) {
-    urban_runoff_array_[,,,i] <- urban_runoff_array[j,,,]
-  }
+  urban_runoff_array_[,,,i] <- urban_runoff_array[urban_runoff_list[i],,,]
 }
 
 surfdata <- nc_open("surfdata_0.9x1.25_hist_78pfts_CMIP6_simyr1850_c190214.nc")
-AREA <- ncvar_get(surfdata, "AREA")
+surfdata <- nc_open("/glade/p/cesmdata/inputdata/lnd/clm2/surfdata_map/release-clm5.0.18/surfdata_0.9x1.25_hist_78pfts_CMIP6_simyr1850_c190214.nc")
+save(list = c("surfdata"), file = "SurfaceDatafor370.RData")
+load("SurfaceDatafor370.RData")
+AREA <- ncvar_get(surfdata, varid='AREA')
 AREA_ <- array(NA, c(288, 192, 120))
 for (i in 1:120) {
   AREA_[ , , i] <- AREA
@@ -56,7 +61,7 @@ QRUNOFF_U_weighted <- QRUNOFF_U_weightedsum / (AREA_*PCT_URBAN)
 
 ##Get DJF and JJA Weighted Runoff
 DJF_QRUNOFF_U_weighted <- array(NA, c(288, 192, 30))
-DJF_list <- list(1,2,12,13,14,24,25,26,36,37,38,48,49,50,60,61,62,72,73,74,84,85,86,96,97,98,108,109,110,120)
+DJF_list <- c(1,2,12,13,14,24,25,26,36,37,38,48,49,50,60,61,62,72,73,74,84,85,86,96,97,98,108,109,110,120)
 for (i in 1:30) {
   for (j in (DJF_list)) {
     DJF_QRUNOFF_U_weighted[,,i] <- QRUNOFF_U_weighted[,,j]
@@ -64,8 +69,8 @@ for (i in 1:30) {
 }
 
 JJA_QRUNOFF_U_weighted <- array(NA, c(288, 192, 30))
-JJA_list <- list(6,7,8,18,19,20,30,31,32,42,43,44,54,55,56,66,67,68,78,79,80,90,91,92,102,103,104,114,115,116)
-for (i in 1:30) {
+JJA_list <- c(6,7,8,18,19,20,30,31,32,42,43,44,54,55,56,66,67,68,78,79,80,90,91,92,102,103,104,114,115,116)
+for (i in 1:15) {
   for (j in (JJA_list)) {
     JJA_QRUNOFF_U_weighted[,,i] <- QRUNOFF_U_weighted[,,j]
   }
@@ -123,10 +128,9 @@ show(p)
 fi <- nc_open("BSSP370cmip6.101.h2-mapped.QRUNOFF_U.201501-210012.nc")
 urban_runoff_array2 <- ncvar_get(fi, "QRUNOFF")
 urban_runoff_array_2 <- array(NA, c(3, 288, 192, 60))
+urban_runoff_list2 <- as.numeric(c(12:71))
 for (i in 1:60) {
-  for (j in 12:71) {
-    urban_runoff_array_2[,,,i] <- urban_runoff_array2[j,,,]
-  }
+  urban_runoff_array_2[,,,i] <- urban_runoff_array2[urban_runoff_list2[i],,,]
 }
 
 surfdata <- nc_open("surfdata_0.9x1.25_hist_78pfts_CMIP6_simyr1850_c190214.nc")
@@ -176,7 +180,7 @@ JJA_QRUNOFF_U_weighted2 <- array(NA, c(288, 192, 15))
 JJA_list2 <- list(6,7,8,18,19,20,30,31,32,42,43,44,54,55,56)
 for (i in 1:15) {
   for (j in (JJA_list2)) {
-    JJA_QRUNOFF_U_weighted[,,i] <- QRUNOFF_U_weighted[,,j]
+    JJA_QRUNOFF_U_weighted2[,,i] <- QRUNOFF_U_weighted2[,,j]
   }
 }
 
@@ -185,7 +189,7 @@ Decadal_Mean_Present <- as.vector(Decadal_Mean_Present)
 
 Mean_Difference <- Decadal_Mean_Future - Decadal_Mean_Present
 Mean_Difference <- as.vector(Mean_Difference)
-Mean_Difference <- Mean_Difference*3600*30.436875
+Mean_Difference <- Mean_Difference*3600*24*30.436875
 
 ##Graphics for Mean Difference between 2016-2020 and 2041-2050## 
 #lon
@@ -223,9 +227,9 @@ p<-ggplot(map.world, aes(x = long, y = lat)) +
   coord_fixed(ratio = 1.25) +
   scale_color_distiller(name = expression(paste("Average Montly Weighted Urban Runoff Difference (mm/month)     ",sep="")),
                         palette = "BrBG",
-                        limits = limits,
-                        labels = labels,
-                        breaks = breaks,
+                        #limits = limits,
+                        #labels = labels,
+                        #breaks = breaks,
                         direction = 1)
 p <- p + theme(legend.title = element_text(size = 16), 
                legend.text = element_text(size = 6))
