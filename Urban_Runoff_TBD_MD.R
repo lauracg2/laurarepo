@@ -9,9 +9,9 @@ library(tidyr)
 workdir <- "/glade/scratch/lgray"
 setwd(workdir)
 
+##Code for Yiwen's future simulations (indexing is different from Cathy's)##
 fi <- nc_open("/glade/work/yiwenz/CESM_CMIP6_Remapping/BSSP245cmip6.101.h2-mapped.QRUNOFF.201501-210012.nc")
 fi <- nc_open("/glade/work/yiwenz/CESM_CMIP6_Remapping/BSSP585cmip6.101.h2-mapped.QRUNOFF.201501-210012.nc")
-#For Yiwen's simulations
 #QRUNOFF (288, 192, 3, 1032)
 urban_runoff_array <- ncvar_get(fi, "QRUNOFF")
 urban_runoff_array_ <- array(NA, c(288, 192, 3, 120))
@@ -55,6 +55,7 @@ QRUNOFF_U_weightedMD <- (QRUNOFF_U_MD*PCT_MD)
 save(list = c("QRUNOFF_U_weightedTBD", "QRUNOFF_U_weightedHD", "QRUNOFF_U_weightedMD"), file = "UrbanDensityRunoff245.RData")
 save(list = c("QRUNOFF_U_weightedTBD", "QRUNOFF_U_weightedHD", "QRUNOFF_U_weightedMD"), file = "UrbanDensityRunoff585.RData")
 
+##Code for Cathy's future simulation (indexing different than Yiwen's)##
 fi <- nc_open("/glade/scratch/xinchang/cmip6_h2_remapped/BSSP370cmip6.101.h2-mapped.QRUNOFF_U.201501-210012.nc")
 
 urban_runoff_array <- ncvar_get(fi, "QRUNOFF")
@@ -98,11 +99,13 @@ QRUNOFF_U_weightedMD <- (QRUNOFF_U_MD*PCT_MD)
 
 save(list = c("QRUNOFF_U_weightedTBD", "QRUNOFF_U_weightedHD", "QRUNOFF_U_weightedMD"), file = "UrbanDensityRunoff370.RData")
 
+##General Code for getting the difference betwen TBD & MD##
 QRUNOFF_U_weightedTBD[QRUNOFF_U_weightedTBD == 0] <- NA
 QRUNOFF_U_weightedMD[QRUNOFF_U_weightedMD == 0] <- NA
 density_difference <- (rowMeans(QRUNOFF_U_weightedTBD, dims = 2) - rowMeans(QRUNOFF_U_weightedMD, dims = 2))*3600*24*30.436875
 density_difference <- as.vector(density_difference)
 
+##Plotting for the 3 figures for future analysis##
 limits = c(-20, 20)
 labels = c("-20", "-10", "0", "10", "20")
 breaks = c(-20, -10, 0, 10, 20)
@@ -182,7 +185,7 @@ p <- p + theme(legend.title = element_text(size = 16),
                legend.text = element_text(size = 6))
 show(p)
 
-
+##Code for Yiwen's present simulations (indexing is different from Cathy's)##
 fi <- nc_open("/glade/work/yiwenz/CESM_CMIP6_Remapping/BSSP245cmip6.101.h2-mapped.QRUNOFF.201501-210012.nc")
 fi <- nc_open("/glade/work/yiwenz/CESM_CMIP6_Remapping/BSSP585cmip6.101.h2-mapped.QRUNOFF.201501-210012.nc")
 
@@ -229,7 +232,7 @@ QRUNOFF_U_weightedMD2 <- (QRUNOFF_U_MD2*PCT_MD2)
 save(list = c("QRUNOFF_U_weightedTBD2", "QRUNOFF_U_weightedHD2", "QRUNOFF_U_weightedMD2"), file = "UrbanDensityRunoffPresent245.RData")
 save(list = c("QRUNOFF_U_weightedTBD2", "QRUNOFF_U_weightedHD2", "QRUNOFF_U_weightedMD2"), file = "UrbanDensityRunoffPresent585.RData")
 
-
+##Code for Cathy's future simulation (indexing different than Yiwen's)##
 fi <- nc_open("/glade/scratch/xinchang/cmip6_h2_remapped/BSSP370cmip6.101.h2-mapped.QRUNOFF_U.201501-210012.nc")
 urban_runoff_array2 <- ncvar_get(fi, "QRUNOFF")
 urban_runoff_array_2 <- array(NA, c(3, 288, 192, 60))
